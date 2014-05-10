@@ -1,6 +1,7 @@
+package agents;
 import jade.core.*;
 
-public class HelloAgent extends Agent {
+public class Hello extends Agent {
     protected void setup()  {
         System.out.println("Hello World!");
     }
