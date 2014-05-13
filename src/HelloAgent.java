@@ -7,10 +7,10 @@ public class HelloAgent extends Agent {
     private static final long serialVersionUID = 1520345756839421693L;
 
     protected void setup() {
-        System.out.println("Hello World!");
+        System.out.println("Hola mundo!");
     }
 
     protected void takeDown() {
-        System.out.println("Goodbye World!");
+        System.out.println("Chao mundo!");
     }
 }
