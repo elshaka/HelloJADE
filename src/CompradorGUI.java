@@ -32,7 +32,7 @@ public class CompradorGUI extends JFrame {
         JButton btnHola = new JButton("Hola");
         btnHola.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                agente.algo();
+                agente.buscarLibro("titulo");
             }
         });
         contentPane.add(btnHola, BorderLayout.CENTER);
