@@ -1,28 +1,30 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.SpringLayout;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SpringLayout;
+import javax.swing.border.EmptyBorder;
 
-import java.awt.Component;
-
-import javax.swing.Box;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class PlanificadorGUI extends JFrame {
 
     private JPanel contentPane;
-
+    private Planificador agente;
+    ArrayList<String> personasList = new ArrayList<String>();
     /**
      * Create the frame.
      */
     public PlanificadorGUI(Planificador planificador) {
+        agente= planificador;
         setTitle("Planificador");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 250, 142);
@@ -36,13 +38,21 @@ public class PlanificadorGUI extends JFrame {
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblAgente, 10, SpringLayout.NORTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblAgente, 10, SpringLayout.WEST, contentPane);
         contentPane.add(lblAgente);
-        
         JLabel lblPapel = new JLabel("Papel");
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblPapel, 16, SpringLayout.SOUTH, lblAgente);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPapel, 0, SpringLayout.WEST, lblAgente);
         contentPane.add(lblPapel);
-        
         JComboBox comboBox_Agente = new JComboBox();
+        comboBox_Agente.addMouseListener(new MouseAdapter() {
+            @Override   
+            public void mouseClicked(MouseEvent arg0) {
+                agente.buscarPersonas(personasList);
+           }
+        });
+               
+        for (int i=0; i<= personasList.size();i++){
+            comboBox_Agente.addItem(personasList);
+        }
         sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox_Agente, 0, SpringLayout.NORTH, lblAgente);
         sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Agente, -10, SpringLayout.EAST, contentPane);
         contentPane.add(comboBox_Agente);
@@ -55,6 +65,13 @@ public class PlanificadorGUI extends JFrame {
         contentPane.add(comboBox_Papel);
         
         JButton btnAplicar = new JButton("Aplicar");
+        btnAplicar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                ArrayList<String> personasList = new ArrayList<String>();
+                agente.buscarPersonas(personasList);
+                
+            }
+        });
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnAplicar, 0, SpringLayout.SOUTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnAplicar, -74, SpringLayout.EAST, contentPane);
         contentPane.add(btnAplicar);
