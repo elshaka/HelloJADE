@@ -12,9 +12,12 @@ public class Vendedor extends Agent {
      * Serial para que Eclipse deje deje joder con la advertencia
      */
     private static final long serialVersionUID = 4479575386140888632L;
+    private VendedorGUI gui = null;
 
     protected void setup() {
         System.out.println("Vendedor iniciado");
+        gui = new VendedorGUI(this);
+        gui.setVisible(true);
         MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP)
@@ -25,7 +28,7 @@ public class Vendedor extends Agent {
              */
             private static final long serialVersionUID = 2297530524097875696L;
 
-            @Override
+         /*/   @Override*/
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
                 ACLMessage propose = cfp.createReply();
                 propose.setPerformative(ACLMessage.PROPOSE);
@@ -33,7 +36,7 @@ public class Vendedor extends Agent {
                 return propose;
             }
 
-            @Override
+         /*   @Override*/
             protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
                 ACLMessage inform = accept.createReply();
                 inform.setPerformative(ACLMessage.INFORM);
@@ -44,5 +47,11 @@ public class Vendedor extends Agent {
 
     protected void takeDown() {
         System.out.println("Vendedor finalizado");
+    }
+
+
+    void venderLibro(String titulo,String Precio ) {
+        // TODO Auto-generated method stub
+        
     }
 }
