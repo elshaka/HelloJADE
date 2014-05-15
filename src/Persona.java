@@ -3,10 +3,14 @@ import java.util.NoSuchElementException;
 import java.util.Vector;
 
 import jade.core.*;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
 import jade.domain.FIPANames;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetInitiator;
@@ -21,6 +25,7 @@ public class Persona extends Agent {
     private String otraPersona;
 
     protected void setup() {
+        // Leer destinatario desde el argumento
         Object[] args = this.getArguments();
         if (args != null && args.length > 0) {
             this.otraPersona = (String) args[0];
@@ -31,9 +36,24 @@ public class Persona extends Agent {
             this.doDelete();
         }
 
+        // Registrarse en el DF como "persona"
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(this.getAID());
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("persona");
+        sd.setName(this.getLocalName());
+        dfd.addServices(sd);
+        try {
+            DFService.register(this, dfd);
+        } catch (FIPAException fe) {
+            fe.printStackTrace();
+        }
+
+        // Mostrar GUI
         gui = new CompradorGUI(this);
         gui.setVisible(true);
 
+        // Agregar comportamiento ContractNetResponder
         MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP)
