@@ -29,7 +29,7 @@ public class VendedorGUI extends JFrame {
      */
     public VendedorGUI(Persona persona) {
         this.agente = persona;
-        setTitle("Vendedor");
+        setTitle(agente.getLocalName() + " (Vendedor)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 366, 158);
         contentPane = new JPanel();
