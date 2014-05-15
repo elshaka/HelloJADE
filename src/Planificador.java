@@ -14,7 +14,7 @@ public class Planificador extends Agent {
         addBehaviour(new TickerBehaviour(this, 1000) {
             protected void onTick() {
                 buscarPersonas();
-            } 
+            }
         });
     }
 
@@ -29,7 +29,7 @@ public class Planificador extends Agent {
         dfd.addServices(sd);
         try {
             DFAgentDescription[] result = DFService.search(this, dfd);
-            System.out.println(result.length + " personas encontradas:" );
+            System.out.println(result.length + " personas encontradas:");
             for(int i = 0; i < result.length; i++) {
                 System.out.println(" " + result[i].getName().getLocalName());
             }

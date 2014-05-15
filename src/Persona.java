@@ -28,11 +28,6 @@ public class Persona extends Agent {
             this.otraPersona = (String) args[0];
         } else {
             System.out.println("No se especificó destinatario");
-            if (this.gui != null) {
-                this.gui.setVisible(false);
-                this.gui = null;
-            }
-            this.doDelete();
         }
 
         // Registrar agente como "persona"
@@ -58,11 +53,6 @@ public class Persona extends Agent {
                 MessageTemplate.MatchPerformative(ACLMessage.CFP)
         );
         addBehaviour(new ContractNetResponder(this, template) {
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 2297530524097875696L;
-
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
                 ACLMessage propose = cfp.createReply();
                 propose.setPerformative(ACLMessage.PROPOSE);
@@ -81,6 +71,12 @@ public class Persona extends Agent {
     }
 
     protected void takeDown() {
+        // Eliminar la GUI
+        if (this.gui != null) {
+            this.gui.setVisible(false);
+            this.gui = null;
+        }
+
         // Eliminar agente del registro
         try {
             DFService.deregister(this);
@@ -95,11 +91,6 @@ public class Persona extends Agent {
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
         msg.setContent(titulo);
         addBehaviour(new ContractNetInitiator(this, msg) {
-            /**
-             * 
-             */
-            private static final long serialVersionUID = -8839651048576471707L;
-
             protected void handlePropose(ACLMessage propose, Vector v) {
                 System.out.println("Vendedor " + propose.getSender().getLocalName() + " ofrece el libro en " + propose.getContent() + " BsF.");
             }
