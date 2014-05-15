@@ -82,6 +82,10 @@ public class Persona extends Agent {
     }
 
     protected void takeDown() {
+        // Eliminar agente del registro
+        try {
+            DFService.deregister(this);
+        } catch (Exception e) {}
         System.out.println(this.getLocalName() + " finalizado");
     }
 
