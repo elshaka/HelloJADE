@@ -20,15 +20,15 @@ public class VendedorGUI extends JFrame {
     private JPanel contentPane;
     
     private JTextField txtArticulo;
-    private Vendedor agente;
+    private Persona agente;
     private JTextField txtPrecio;
     private JLabel lblArticulo;
     private JLabel lblPrecio;
     /**
      * Create the frame.
      */
-    public VendedorGUI(Vendedor vendedor) {
-        agente=vendedor;
+    public VendedorGUI(Persona persona) {
+        this.agente = persona;
         setTitle("Vendedor");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 366, 158);
@@ -64,9 +64,5 @@ public class VendedorGUI extends JFrame {
                 agente.venderLibro("titulo", "1000");
             }
         });
-        
-  
-
-       
     }
 }

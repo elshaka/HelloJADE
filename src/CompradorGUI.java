@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class CompradorGUI extends JFrame {
@@ -22,15 +24,15 @@ public class CompradorGUI extends JFrame {
      */
     private static final long serialVersionUID = -6485511916292451003L;
     private JTextField textField;
-    private Comprador agente;
+    private Persona agente;
 
     /**
      * Create the frame.
      */
-    public CompradorGUI(Comprador comprador) {
+    public CompradorGUI(Persona comprador) {
         agente = comprador;
         setResizable(false);
-        setTitle("Comprador");
+        setTitle(agente.getLocalName() + " (Comprador)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 260, 160);
         SpringLayout springLayout = new SpringLayout();
@@ -61,6 +63,11 @@ public class CompradorGUI extends JFrame {
         textField.setColumns(10);
         
         JButton btnNewButton = new JButton("Buscar");
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                agente.buscarLibro("titulo");
+            }
+        });
         springLayout.putConstraint(SpringLayout.WEST, btnNewButton, -154, SpringLayout.EAST, getContentPane());
         springLayout.putConstraint(SpringLayout.SOUTH, btnNewButton, -10, SpringLayout.SOUTH, getContentPane());
         springLayout.putConstraint(SpringLayout.EAST, btnNewButton, -89, SpringLayout.EAST, getContentPane());
