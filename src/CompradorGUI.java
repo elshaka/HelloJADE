@@ -7,22 +7,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.BoxLayout;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.SpringLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
+@SuppressWarnings("serial")
 public class CompradorGUI extends JFrame {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6485511916292451003L;
     private JTextField textField;
     private Persona agente;
 

@@ -16,11 +16,8 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
 
+@SuppressWarnings("serial")
 public class Persona extends Agent {
-    /**
-     * Serial para que Eclipse deje deje joder con la advertencia
-     */
-    private static final long serialVersionUID = 1520345756839421693L;
     private CompradorGUI gui = null;
     private String otraPersona;
 
@@ -31,12 +28,14 @@ public class Persona extends Agent {
             this.otraPersona = (String) args[0];
         } else {
             System.out.println("No se especificó destinatario");
-            this.gui.setVisible(false);
-            this.gui = null;
+            if (this.gui != null) {
+                this.gui.setVisible(false);
+                this.gui = null;
+            }
             this.doDelete();
         }
 
-        // Registrarse en el DF como "persona"
+        // Registrar agente como "persona"
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(this.getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -45,8 +44,8 @@ public class Persona extends Agent {
         dfd.addServices(sd);
         try {
             DFService.register(this, dfd);
-        } catch (FIPAException fe) {
-            fe.printStackTrace();
+        } catch (FIPAException e) {
+            e.printStackTrace();
         }
 
         // Mostrar GUI

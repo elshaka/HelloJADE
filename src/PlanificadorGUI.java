@@ -9,10 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+
 import java.awt.Component;
+
 import javax.swing.Box;
 
-
+@SuppressWarnings("serial")
 public class PlanificadorGUI extends JFrame {
 
     private JPanel contentPane;
