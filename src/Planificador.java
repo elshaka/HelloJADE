@@ -10,8 +10,6 @@ import jade.proto.AchieveREInitiator;
 import jade.domain.FIPANames;
 
 import java.util.Date;
-import java.util.Vector;
-
 
 @SuppressWarnings("serial")
 public class Planificador extends Agent {
@@ -46,7 +44,7 @@ public class Planificador extends Agent {
         return personas;
     }
     
-    // Inicia el protocolo FIPARequestInitiator para asignar el papel a una persona
+    // Inicia el protocolo FIPARequest para asignar el papel a una persona
     void aplicarPapel(String persona, String papel){
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID((String) persona, AID.ISLOCALNAME));
