@@ -128,22 +128,16 @@ public class Persona extends Agent {
         dfd.addServices(sd);
 
         // Actualizar registro y actualizar GUI
-        try {
-            DFService.modify(this, dfd);
+        DFService.modify(this, dfd);
 
-            cerrarVistas();
-            switch(papel) {
-            case "Comprador":
-                // Mostrar guiComprador
-                guiComprador.setVisible(true);
-                break;
-            case "Vendedor":
-                // Mostrar guiVendedor
-                guiVendedor.setVisible(true);
-                break;
-            }
-        } catch (FIPAException e) {
-            throw new FIPAException("Error al intentar actualizar el registro");
+        cerrarVistas();
+        switch(papel) {
+        case "Comprador":
+            guiComprador.setVisible(true);
+            break;
+        case "Vendedor":
+            guiVendedor.setVisible(true);
+            break;
         }
     }
 
