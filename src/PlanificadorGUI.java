@@ -77,7 +77,7 @@ public class PlanificadorGUI extends JFrame {
         btnAplicar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 // Asigno los valores de Persona y Papel a quien se desea asignar
-                agente.papelPersonaIniciador(comboBox_Agente.getSelectedItem().toString(), comboBox_Papel.getSelectedItem().toString());
+                agente.aplicarPapel(comboBox_Agente.getSelectedItem().toString(), comboBox_Papel.getSelectedItem().toString());
             }
         });
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnAplicar, 0, SpringLayout.SOUTH, contentPane);

@@ -46,8 +46,8 @@ public class Planificador extends Agent {
         return personas;
     }
     
-    //Comunica como FIPARequestInitiatorAgent
-    void papelPersonaIniciador(String persona, String papel){
+    // Inicia el protocolo FIPARequestInitiator para asignar el papel a una persona
+    void aplicarPapel(String persona, String papel){
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID((String) persona, AID.ISLOCALNAME));
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
@@ -69,13 +69,6 @@ public class Planificador extends Agent {
                     System.out.println("La persona no existe");
                 } else {
                     System.out.println(failure.getSender().getLocalName() + ": " + failure.getContent());
-                }
-            }
-
-            protected void handleAllResultNotifications(Vector notifications) {
-                if (notifications.size() == 0) {
-                    // Some responder didn't reply within the specified timeout
-                    System.out.println("Timeout expired: missing  responses");
                 }
             }
         });
