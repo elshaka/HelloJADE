@@ -81,6 +81,31 @@ public class Persona extends Agent {
         System.out.println(this.getLocalName() + " finalizado");
     }
 
+    void actualizarPapel(String papel) {
+        // Nuevo registro
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(this.getAID());
+
+        // Papel de persona
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("persona");
+        sd.setName(this.getLocalName());
+        dfd.addServices(sd);
+
+        // Papel de comprador/vendedor
+        sd = new ServiceDescription();
+        sd.setType(papel);
+        sd.setName(this.getLocalName());
+        dfd.addServices(sd);
+
+        // Actualizar registro
+        try {
+            DFService.modify(this, dfd);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
+    }
+
     void cerrarVistas(){
         if (this.guiComprador != null) {
             this.guiComprador.setVisible(false);
