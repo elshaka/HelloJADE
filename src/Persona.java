@@ -18,7 +18,8 @@ import jade.proto.ContractNetResponder;
 
 @SuppressWarnings("serial")
 public class Persona extends Agent {
-    private CompradorGUI gui = null;
+    private CompradorGUI guiComprador = null;
+    private VendedorGUI guiVendedor = null;
     private String otraPersona;
 
     protected void setup() {
@@ -29,7 +30,9 @@ public class Persona extends Agent {
         } else {
             System.out.println("No se especificó destinatario");
         }
-
+        
+        seleccionPapel("Comprador");
+        
         // Registrar agente como "persona"
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(this.getAID());
@@ -43,9 +46,7 @@ public class Persona extends Agent {
             e.printStackTrace();
         }
 
-        // Mostrar GUI
-        gui = new CompradorGUI(this);
-        gui.setVisible(true);
+
 
         // Agregar comportamiento ContractNetResponder
         MessageTemplate template = MessageTemplate.and(
@@ -72,16 +73,40 @@ public class Persona extends Agent {
 
     protected void takeDown() {
         // Eliminar la GUI
-        if (this.gui != null) {
-            this.gui.setVisible(false);
-            this.gui = null;
-        }
-
+        cerrarVistas();
         // Eliminar agente del registro
         try {
             DFService.deregister(this);
         } catch (Exception e) {}
         System.out.println(this.getLocalName() + " finalizado");
+    }
+    
+    void cerrarVistas(){
+        if (this.guiComprador != null) {
+            this.guiComprador.setVisible(false);
+            this.guiComprador = null;
+        }
+        if (this.guiVendedor != null) {
+            this.guiVendedor.setVisible(false);
+            this.guiVendedor = null;
+        }
+    }
+    
+    void seleccionPapel(String papel){
+        cerrarVistas();
+        switch(papel) {
+        case "Comprador":
+            // Mostrar guiComprador
+            guiComprador = new CompradorGUI(this);
+            guiComprador.setVisible(true);
+            break;
+        case "Vendedor":
+            // Mostrar guiVendedor
+            guiVendedor = new VendedorGUI(this);
+            guiVendedor.setVisible(true);
+            break;
+        }
+        
     }
 
     void buscarLibro(String titulo) {
