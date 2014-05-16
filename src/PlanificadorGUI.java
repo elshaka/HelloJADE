@@ -13,13 +13,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 @SuppressWarnings("serial")
 public class PlanificadorGUI extends JFrame {
 
     private JPanel contentPane;
     private Planificador agente;
-    ArrayList<String> personasList = new ArrayList<String>();
+    private JComboBox comboBox_Agente;
     /**
      * Create the frame.
      */
@@ -42,17 +43,18 @@ public class PlanificadorGUI extends JFrame {
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblPapel, 16, SpringLayout.SOUTH, lblAgente);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPapel, 0, SpringLayout.WEST, lblAgente);
         contentPane.add(lblPapel);
-        JComboBox comboBox_Agente = new JComboBox();
+        comboBox_Agente = new JComboBox();
         comboBox_Agente.addMouseListener(new MouseAdapter() {
             @Override   
             public void mouseClicked(MouseEvent arg0) {
-                agente.buscarPersonas(personasList);
-           }
+                comboBox_Agente.removeAllItems();
+                ArrayList<String> personas = agente.buscarPersonas();
+                Iterator<String> i = personas.iterator();
+                while(i.hasNext()) {
+                    comboBox_Agente.addItem(i.next());
+                }
+            }
         });
-               
-        for (int i=0; i<= personasList.size();i++){
-            comboBox_Agente.addItem(personasList);
-        }
         sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox_Agente, 0, SpringLayout.NORTH, lblAgente);
         sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Agente, -10, SpringLayout.EAST, contentPane);
         contentPane.add(comboBox_Agente);
@@ -67,9 +69,7 @@ public class PlanificadorGUI extends JFrame {
         JButton btnAplicar = new JButton("Aplicar");
         btnAplicar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                ArrayList<String> personasList = new ArrayList<String>();
-                agente.buscarPersonas(personasList);
-                
+                // TODO
             }
         });
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnAplicar, 0, SpringLayout.SOUTH, contentPane);

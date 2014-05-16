@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 import jade.core.*;
-import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -16,36 +15,28 @@ public class Planificador extends Agent {
         System.out.println(this.getLocalName() + " iniciado");
         gui = new PlanificadorGUI(this);
         gui.setVisible(true);
-       
-    /*    // Buscar personas cada segundo
-        addBehaviour(new TickerBehaviour(this, 1000) {
-            protected void onTick() {
-                buscarPersonas();
-            }
-        });
-        */
     }
 
     protected void takeDown() {
         System.out.println(this.getLocalName() + " terminado");
     }
 
-     void buscarPersonas(ArrayList<String> listapersonas) {
-         
+    ArrayList<String> buscarPersonas() {
+        ArrayList<String> personas = new ArrayList<String>();
+
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd  = new ServiceDescription();
         sd.setType("persona");
         dfd.addServices(sd);
         try {
             DFAgentDescription[] result = DFService.search(this, dfd);
-            System.out.println(result.length + " personas encontradas:");
             for(int i = 0; i < result.length; i++) {
-                System.out.println(" " + result[i].getName().getLocalName());
-                listapersonas.add(result[i].getName().getLocalName());
+                personas.add(result[i].getName().getLocalName());
             }
-           
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
+
+        return personas;
     }
 }
