@@ -31,8 +31,9 @@ public class Persona extends Agent {
             System.out.println("No se especificó destinatario");
         }
         
-        seleccionPapel("Comprador");
-        
+        guiComprador = new CompradorGUI(this);
+        guiVendedor = new VendedorGUI(this);
+
         // Registrar agente como "persona"
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(this.getAID());
@@ -45,8 +46,6 @@ public class Persona extends Agent {
         } catch (FIPAException e) {
             e.printStackTrace();
         }
-
-
 
         // Agregar comportamiento ContractNetResponder
         MessageTemplate template = MessageTemplate.and(
@@ -73,40 +72,36 @@ public class Persona extends Agent {
 
     protected void takeDown() {
         // Eliminar la GUI
-        cerrarVistas();
+        this.guiComprador = null;
+        this.guiVendedor = null;
         // Eliminar agente del registro
         try {
             DFService.deregister(this);
         } catch (Exception e) {}
         System.out.println(this.getLocalName() + " finalizado");
     }
-    
+
     void cerrarVistas(){
         if (this.guiComprador != null) {
             this.guiComprador.setVisible(false);
-            this.guiComprador = null;
         }
         if (this.guiVendedor != null) {
             this.guiVendedor.setVisible(false);
-            this.guiVendedor = null;
         }
     }
-    
+
     void seleccionPapel(String papel){
         cerrarVistas();
         switch(papel) {
         case "Comprador":
             // Mostrar guiComprador
-            guiComprador = new CompradorGUI(this);
             guiComprador.setVisible(true);
             break;
         case "Vendedor":
             // Mostrar guiVendedor
-            guiVendedor = new VendedorGUI(this);
             guiVendedor.setVisible(true);
             break;
         }
-        
     }
 
     void buscarLibro(String titulo) {
