@@ -19,8 +19,9 @@ import jade.proto.ContractNetResponder;
 
 @SuppressWarnings("serial")
 public class Persona extends Agent {
-    private CompradorGUI guiComprador = null;
-    private VendedorGUI guiVendedor = null;
+    private CompradorGUI guiComprador;
+    private VendedorGUI guiVendedor;
+    public String papel;
     private String otraPersona;
 
     protected void setup() {
@@ -28,10 +29,8 @@ public class Persona extends Agent {
         Object[] args = this.getArguments();
         if (args != null && args.length > 0) {
             this.otraPersona = (String) args[0];
-        } else {
-            System.out.println("No se especificó destinatario");
         }
-        
+
         guiComprador = new CompradorGUI(this);
         guiVendedor = new VendedorGUI(this);
 
@@ -68,33 +67,34 @@ public class Persona extends Agent {
             }
         });
 
-        System.out.println(this.getLocalName() + " iniciado con " + otraPersona);
+        // Agregar comportamiento AchieveREResponder
+        template = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+                MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
+        );
+        addBehaviour(new AchieveREResponder(this, template) {
+            protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
+                if(request.getContent().equals(papel)) {
+                    throw new RefuseException("El papel a asignar es el mismo que el actual");
+                }
+                ACLMessage agree = request.createReply();
+                agree.setPerformative(ACLMessage.AGREE);
+                return agree;
+            }
 
-        //Implementacion Protocolo FIPARequestResponerAgent
-        MessageTemplate templateRequest = MessageTemplate.and(
-            MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-            MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
-            
-            addBehaviour(new AchieveREResponder(this, templateRequest) {
-                protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
-                    System.out.println("Agent "+getLocalName()+": REQUEST received from "+request.getSender().getName()+". Action is "+request.getContent());
-                        // We agree to perform the action. Note that in the FIPA-Request
-                        // protocol the AGREE message is optional. Return null if you
-                        // don't want to send it.
-                        System.out.println("Agent "+getLocalName()+": Agree");
-                        ACLMessage agree = request.createReply();
-                        agree.setPerformative(ACLMessage.AGREE);
-                        seleccionPapel(request.getContent().toString());
-                        return agree;
+            protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
+                try {
+                    actualizarPapel(request.getContent());
+                    ACLMessage inform = request.createReply();
+                    inform.setPerformative(ACLMessage.INFORM);
+                    return inform;
+                } catch (FIPAException fe) {
+                    throw new FailureException(fe.getMessage());
                 }
-                
-                protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
-                        System.out.println("Agent "+getLocalName()+": Action successfully performed");
-                        ACLMessage inform = request.createReply();
-                        inform.setPerformative(ACLMessage.INFORM);
-                        return inform;
-                }
-            } );
+            }
+        });
+
+        System.out.println(this.getLocalName() + " iniciado");
     }
 
     protected void takeDown() {
@@ -108,7 +108,9 @@ public class Persona extends Agent {
         System.out.println(this.getLocalName() + " finalizado");
     }
 
-    void actualizarPapel(String papel) {
+    void actualizarPapel(String papel) throws FIPAException {
+        this.papel = papel;
+
         // Nuevo registro
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(this.getAID());
@@ -125,11 +127,23 @@ public class Persona extends Agent {
         sd.setName(this.getLocalName());
         dfd.addServices(sd);
 
-        // Actualizar registro
+        // Actualizar registro y actualizar GUI
         try {
             DFService.modify(this, dfd);
+
+            cerrarVistas();
+            switch(papel) {
+            case "Comprador":
+                // Mostrar guiComprador
+                guiComprador.setVisible(true);
+                break;
+            case "Vendedor":
+                // Mostrar guiVendedor
+                guiVendedor.setVisible(true);
+                break;
+            }
         } catch (FIPAException e) {
-            e.printStackTrace();
+            throw new FIPAException("Error al intentar actualizar el registro");
         }
     }
 
@@ -142,26 +156,13 @@ public class Persona extends Agent {
         }
     }
 
-    void seleccionPapel(String papel){
-        cerrarVistas();
-        switch(papel) {
-        case "Comprador":
-            // Mostrar guiComprador
-            guiComprador.setVisible(true);
-            break;
-        case "Vendedor":
-            // Mostrar guiVendedor
-            guiVendedor.setVisible(true);
-            break;
-        }
-    }
-
     void buscarLibro(String titulo) {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         msg.addReceiver(new AID(this.otraPersona, AID.ISLOCALNAME));
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
         msg.setContent(titulo);
+
         addBehaviour(new ContractNetInitiator(this, msg) {
             protected void handlePropose(ACLMessage propose, Vector v) {
                 System.out.println("Vendedor " + propose.getSender().getLocalName() + " ofrece el libro en " + propose.getContent() + " BsF.");
