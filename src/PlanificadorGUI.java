@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
 
 @SuppressWarnings("serial")
 public class PlanificadorGUI extends JFrame {
@@ -44,29 +46,35 @@ public class PlanificadorGUI extends JFrame {
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPapel, 0, SpringLayout.WEST, lblAgente);
         contentPane.add(lblPapel);
         comboBox_Agente = new JComboBox();
-        comboBox_Agente.addMouseListener(new MouseAdapter() {
-            @Override   
-            public void mouseClicked(MouseEvent arg0) {
+        comboBox_Agente.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuCanceled(PopupMenuEvent arg0) {
+            }
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
+            }
+            
+            public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
                 comboBox_Agente.removeAllItems();
                 ArrayList<String> personas = agente.buscarPersonas();
                 Iterator<String> i = personas.iterator();
                 while(i.hasNext()) {
                     comboBox_Agente.addItem(i.next());
-                }
+                }  
             }
         });
+
         sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox_Agente, 0, SpringLayout.NORTH, lblAgente);
         sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Agente, -10, SpringLayout.EAST, contentPane);
         contentPane.add(comboBox_Agente);
         
         JComboBox comboBox_Papel = new JComboBox();
         sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox_Papel, -3, SpringLayout.NORTH, lblPapel);
-        sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Papel, 0, SpringLayout.EAST, comboBox_Agente);
+        sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Papel, -10, SpringLayout.EAST, contentPane);
         comboBox_Papel.setToolTipText("");
         comboBox_Papel.setModel(new DefaultComboBoxModel(new String[] {"Comprador", "Vendedor"}));
         contentPane.add(comboBox_Papel);
         
         JButton btnAplicar = new JButton("Aplicar");
+        sl_contentPane.putConstraint(SpringLayout.WEST, comboBox_Agente, 0, SpringLayout.WEST, btnAplicar);
         btnAplicar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 // TODO
