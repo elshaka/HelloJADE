@@ -13,6 +13,7 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
 
@@ -68,6 +69,32 @@ public class Persona extends Agent {
         });
 
         System.out.println(this.getLocalName() + " iniciado con " + otraPersona);
+
+        //Implementacion Protocolo FIPARequestResponerAgent
+        MessageTemplate templateRequest = MessageTemplate.and(
+            MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+            MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
+            
+            addBehaviour(new AchieveREResponder(this, templateRequest) {
+                protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
+                    System.out.println("Agent "+getLocalName()+": REQUEST received from "+request.getSender().getName()+". Action is "+request.getContent());
+                        // We agree to perform the action. Note that in the FIPA-Request
+                        // protocol the AGREE message is optional. Return null if you
+                        // don't want to send it.
+                        System.out.println("Agent "+getLocalName()+": Agree");
+                        ACLMessage agree = request.createReply();
+                        agree.setPerformative(ACLMessage.AGREE);
+                        seleccionPapel(request.getContent().toString());
+                        return agree;
+                }
+                
+                protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
+                        System.out.println("Agent "+getLocalName()+": Action successfully performed");
+                        ACLMessage inform = request.createReply();
+                        inform.setPerformative(ACLMessage.INFORM);
+                        return inform;
+                }
+            } );
     }
 
     protected void takeDown() {

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.PopupMenuEvent;
 
@@ -20,6 +21,7 @@ public class PlanificadorGUI extends JFrame {
     private JPanel contentPane;
     private Planificador agente;
     private JComboBox comboBox_Agente;
+    private JComboBox comboBox_Papel;
     /**
      * Create the frame.
      */
@@ -63,7 +65,7 @@ public class PlanificadorGUI extends JFrame {
         sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Agente, -10, SpringLayout.EAST, contentPane);
         contentPane.add(comboBox_Agente);
         
-        JComboBox comboBox_Papel = new JComboBox();
+        comboBox_Papel = new JComboBox();
         sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox_Papel, -3, SpringLayout.NORTH, lblPapel);
         sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Papel, -10, SpringLayout.EAST, contentPane);
         comboBox_Papel.setToolTipText("");
@@ -74,7 +76,8 @@ public class PlanificadorGUI extends JFrame {
         sl_contentPane.putConstraint(SpringLayout.WEST, comboBox_Agente, 0, SpringLayout.WEST, btnAplicar);
         btnAplicar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                // TODO
+                // Asigno los valores de Persona y Papel a quien se desea asignar
+                agente.papelPersonaIniciador(comboBox_Agente.getSelectedItem().toString(), comboBox_Papel.getSelectedItem().toString());
             }
         });
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnAplicar, 0, SpringLayout.SOUTH, contentPane);
