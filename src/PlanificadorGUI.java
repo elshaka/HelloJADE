@@ -22,12 +22,13 @@ public class PlanificadorGUI extends JFrame {
     private Planificador agente;
     private JComboBox comboBox_Agente;
     private JComboBox comboBox_Papel;
+    private JButton btnAplicar;
     /**
      * Create the frame.
      */
     public PlanificadorGUI(Planificador planificador) {
         agente= planificador;
-        setTitle("Planificador");
+        setTitle(agente.getLocalName() + " (Planificador)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 250, 142);
         contentPane = new JPanel();
@@ -57,7 +58,14 @@ public class PlanificadorGUI extends JFrame {
                 Iterator<String> i = personas.iterator();
                 while(i.hasNext()) {
                     comboBox_Agente.addItem(i.next());
-                }  
+                }
+                if(comboBox_Agente.getItemCount()!=0){
+                    btnAplicar.setEnabled(true);
+                }
+                else{
+                    btnAplicar.setEnabled(false);
+                }
+                    
             }
         });
 
@@ -72,7 +80,8 @@ public class PlanificadorGUI extends JFrame {
         comboBox_Papel.setModel(new DefaultComboBoxModel(new String[] {"Comprador", "Vendedor"}));
         contentPane.add(comboBox_Papel);
         
-        JButton btnAplicar = new JButton("Aplicar");
+        btnAplicar = new JButton("Aplicar");
+        btnAplicar.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.WEST, comboBox_Agente, 0, SpringLayout.WEST, btnAplicar);
         btnAplicar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
