@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class CompradorGUI extends JFrame {
-    private JTextField textField;
     private Persona agente;
 
     /**
@@ -33,7 +32,7 @@ public class CompradorGUI extends JFrame {
         setResizable(false);
         setTitle(agente.getLocalName() + " (Comprador)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 260, 160);
+        setBounds(100, 100, 260, 138);
         SpringLayout springLayout = new SpringLayout();
         getContentPane().setLayout(springLayout);
         
@@ -43,33 +42,35 @@ public class CompradorGUI extends JFrame {
         getContentPane().add(lblNewLabel);
         
         JLabel lblLibro = new JLabel("Libro");
-        springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, -17, SpringLayout.NORTH, lblLibro);
+        springLayout.putConstraint(SpringLayout.NORTH, lblLibro, 58, SpringLayout.NORTH, getContentPane());
+        springLayout.putConstraint(SpringLayout.EAST, lblLibro, 30, SpringLayout.WEST, lblNewLabel);
         springLayout.putConstraint(SpringLayout.WEST, lblLibro, 0, SpringLayout.WEST, lblNewLabel);
         getContentPane().add(lblLibro);
         
-        JComboBox comboBox = new JComboBox();
-        springLayout.putConstraint(SpringLayout.NORTH, lblLibro, 3, SpringLayout.NORTH, comboBox);
-        springLayout.putConstraint(SpringLayout.EAST, comboBox, -10, SpringLayout.EAST, getContentPane());
-        comboBox.setModel(new DefaultComboBoxModel(new String[] {"Algebra lineal", "Calculo II", "Fisica I"}));
-        getContentPane().add(comboBox);
-        
-        textField = new JTextField();
-        springLayout.putConstraint(SpringLayout.NORTH, comboBox, 16, SpringLayout.SOUTH, textField);
-        springLayout.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, comboBox);
+        JTextField textField = new JTextField();
+        springLayout.putConstraint(SpringLayout.WEST, textField, 38, SpringLayout.EAST, lblNewLabel);
         springLayout.putConstraint(SpringLayout.EAST, textField, -10, SpringLayout.EAST, getContentPane());
         springLayout.putConstraint(SpringLayout.NORTH, textField, 19, SpringLayout.NORTH, getContentPane());
         getContentPane().add(textField);
         textField.setColumns(10);
         
         JButton btnNewButton = new JButton("Buscar");
+        springLayout.putConstraint(SpringLayout.WEST, btnNewButton, -75, SpringLayout.EAST, getContentPane());
+        springLayout.putConstraint(SpringLayout.EAST, btnNewButton, 0, SpringLayout.EAST, textField);
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 agente.buscarLibro("titulo");
             }
         });
-        springLayout.putConstraint(SpringLayout.WEST, btnNewButton, -154, SpringLayout.EAST, getContentPane());
-        springLayout.putConstraint(SpringLayout.SOUTH, btnNewButton, -10, SpringLayout.SOUTH, getContentPane());
-        springLayout.putConstraint(SpringLayout.EAST, btnNewButton, -89, SpringLayout.EAST, getContentPane());
         getContentPane().add(btnNewButton);
+        
+        JTextField textField_1 = new JTextField();
+        springLayout.putConstraint(SpringLayout.NORTH, btnNewButton, 6, SpringLayout.SOUTH, textField_1);
+        springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, -14, SpringLayout.NORTH, textField_1);
+        springLayout.putConstraint(SpringLayout.EAST, textField_1, 0, SpringLayout.EAST, textField);
+        springLayout.putConstraint(SpringLayout.NORTH, textField_1, -3, SpringLayout.NORTH, lblLibro);
+        springLayout.putConstraint(SpringLayout.WEST, textField_1, 6, SpringLayout.EAST, lblLibro);
+        getContentPane().add(textField_1);
+        textField_1.setColumns(10);
     }
 }

@@ -59,13 +59,7 @@ public class PlanificadorGUI extends JFrame {
                 while(i.hasNext()) {
                     comboBox_Agente.addItem(i.next());
                 }
-                if(comboBox_Agente.getItemCount()!=0){
-                    btnAplicar.setEnabled(true);
-                }
-                else{
-                    btnAplicar.setEnabled(false);
-                }
-                    
+                btnAplicar.setEnabled(!(comboBox_Agente.getItemCount()==0));
             }
         });
 
