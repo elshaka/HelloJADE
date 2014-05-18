@@ -4,24 +4,25 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.BoxLayout;
-
-import java.awt.GridBagLayout;
-
 import javax.swing.SpringLayout;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-
+import java.awt.Dimension;
 import java.awt.Component;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class CompradorGUI extends JFrame {
+
+    private JPanel contentPane;
+    private JTextField textFieldDineroDisponible;
     private Persona agente;
 
     /**
@@ -29,48 +30,56 @@ public class CompradorGUI extends JFrame {
      */
     public CompradorGUI(Persona comprador) {
         agente = comprador;
-        setResizable(false);
         setTitle(agente.getLocalName() + " (Comprador)");
+        setPreferredSize(new Dimension(310, 140));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 260, 138);
-        SpringLayout springLayout = new SpringLayout();
-        getContentPane().setLayout(springLayout);
+        setBounds(100, 100, 310, 150);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        SpringLayout sl_contentPane = new SpringLayout();
+        contentPane.setLayout(sl_contentPane);
         
-        JLabel lblNewLabel = new JLabel("Dinero disponible (Bs.)");
-        springLayout.putConstraint(SpringLayout.NORTH, lblNewLabel, 17, SpringLayout.NORTH, getContentPane());
-        springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 10, SpringLayout.WEST, getContentPane());
-        getContentPane().add(lblNewLabel);
+        JLabel lblDineroDisponible = new JLabel("Dinero disponible (Bs.)");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDineroDisponible, 10, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDineroDisponible, 10, SpringLayout.WEST, contentPane);
+        contentPane.add(lblDineroDisponible);
+        
+        textFieldDineroDisponible = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, textFieldDineroDisponible, -3, SpringLayout.NORTH, lblDineroDisponible);
+        sl_contentPane.putConstraint(SpringLayout.WEST, textFieldDineroDisponible, -129, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, textFieldDineroDisponible, -10, SpringLayout.EAST, contentPane);
+        textFieldDineroDisponible.setPreferredSize(new Dimension(120, 20));
+        contentPane.add(textFieldDineroDisponible);
+        textFieldDineroDisponible.setColumns(10);
+        
+        JComboBox comboBoxLibros = new JComboBox();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, comboBoxLibros, 39, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, comboBoxLibros, -10, SpringLayout.EAST, contentPane);
+        comboBoxLibros.setPreferredSize(new Dimension(120, 20));
+        comboBoxLibros.setModel(new DefaultComboBoxModel(new String[] {"Algebra Lineal", "Calculo II", "Fisica I", "Ingles II"}));
+        contentPane.add(comboBoxLibros);
         
         JLabel lblLibro = new JLabel("Libro");
-        springLayout.putConstraint(SpringLayout.NORTH, lblLibro, 58, SpringLayout.NORTH, getContentPane());
-        springLayout.putConstraint(SpringLayout.EAST, lblLibro, 30, SpringLayout.WEST, lblNewLabel);
-        springLayout.putConstraint(SpringLayout.WEST, lblLibro, 0, SpringLayout.WEST, lblNewLabel);
-        getContentPane().add(lblLibro);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblLibro, 3, SpringLayout.NORTH, comboBoxLibros);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblLibro, 10, SpringLayout.WEST, contentPane);
+        contentPane.add(lblLibro);
         
-        JTextField textField = new JTextField();
-        springLayout.putConstraint(SpringLayout.WEST, textField, 38, SpringLayout.EAST, lblNewLabel);
-        springLayout.putConstraint(SpringLayout.EAST, textField, -10, SpringLayout.EAST, getContentPane());
-        springLayout.putConstraint(SpringLayout.NORTH, textField, 19, SpringLayout.NORTH, getContentPane());
-        getContentPane().add(textField);
-        textField.setColumns(10);
-        
-        JButton btnNewButton = new JButton("Buscar");
-        springLayout.putConstraint(SpringLayout.WEST, btnNewButton, -75, SpringLayout.EAST, getContentPane());
-        springLayout.putConstraint(SpringLayout.EAST, btnNewButton, 0, SpringLayout.EAST, textField);
-        btnNewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
+        JButton btnBuscar = new JButton("Buscar");
+        btnBuscar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 agente.buscarLibro("titulo");
             }
         });
-        getContentPane().add(btnNewButton);
+
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnBuscar, 39, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnBuscar, 0, SpringLayout.SOUTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnBuscar, -162, SpringLayout.EAST, contentPane);
+        contentPane.add(btnBuscar);
         
-        JTextField textField_1 = new JTextField();
-        springLayout.putConstraint(SpringLayout.NORTH, btnNewButton, 6, SpringLayout.SOUTH, textField_1);
-        springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, -14, SpringLayout.NORTH, textField_1);
-        springLayout.putConstraint(SpringLayout.EAST, textField_1, 0, SpringLayout.EAST, textField);
-        springLayout.putConstraint(SpringLayout.NORTH, textField_1, -3, SpringLayout.NORTH, lblLibro);
-        springLayout.putConstraint(SpringLayout.WEST, textField_1, 6, SpringLayout.EAST, lblLibro);
-        getContentPane().add(textField_1);
-        textField_1.setColumns(10);
+        JButton btnEditarLista = new JButton("Editar lista");
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnEditarLista, 39, SpringLayout.EAST, btnBuscar);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnEditarLista, 0, SpringLayout.SOUTH, contentPane);
+        contentPane.add(btnEditarLista);
     }
 }
