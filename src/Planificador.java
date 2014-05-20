@@ -11,12 +11,34 @@ import jade.domain.FIPANames;
 
 import java.util.Date;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 @SuppressWarnings("serial")
 public class Planificador extends Agent {
     private PlanificadorGUI gui= null;
     
     protected void setup() {
         System.out.println(this.getLocalName() + " iniciado");
+        
+        try {
+            // Set System L&F
+            UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException e) {
+           // handle exception
+        }
+        catch (ClassNotFoundException e) {
+           // handle exception
+        }
+        catch (InstantiationException e) {
+           // handle exception
+        }
+        catch (IllegalAccessException e) {
+           // handle exception
+        }
+        
         gui = new PlanificadorGUI(this);
         gui.setVisible(true);
     }
