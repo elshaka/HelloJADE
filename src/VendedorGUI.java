@@ -41,7 +41,6 @@ public class VendedorGUI extends JFrame {
     public VendedorGUI(Persona persona) {
         this.agente = persona;
         setTitle(agente.getLocalName() + " (Vendedor)");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 415, 319);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));

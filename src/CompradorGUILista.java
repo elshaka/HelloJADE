@@ -21,34 +21,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class CompradorGUI_Lista extends JFrame {
+public class CompradorGUILista extends JFrame {
 
     private JPanel contentPane;
     private JTable table;
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    CompradorGUI_Lista frame = new CompradorGUI_Lista();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+    private CompradorGUIAgregarEditarLibro guiCompradorAgregarEditarLibro;
 
     /**
      * Create the frame.
      */
-    public CompradorGUI_Lista() {
+    public CompradorGUILista() {
         setTitle("Editar libros");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 240);
+        setBounds(100, 100, 325, 170);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -62,11 +46,6 @@ public class CompradorGUI_Lista extends JFrame {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setModel(new DefaultTableModel(
             new Object[][] {
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
                 {null},
                 {null},
                 {null},
@@ -93,30 +72,35 @@ public class CompradorGUI_Lista extends JFrame {
         Component horizontalGlue_2 = Box.createHorizontalGlue();
         horizontalBox.add(horizontalGlue_2);
         
-        JButton btnNewButton = new JButton("Agregar");
-        btnNewButton.addActionListener(new ActionListener() {
+        JButton btnAgregar = new JButton("Agregar");
+        btnAgregar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                guiCompradorAgregarEditarLibro.setVisible(true);
             }
         });
-        horizontalBox.add(btnNewButton);
+        horizontalBox.add(btnAgregar);
         
         Component horizontalGlue = Box.createHorizontalGlue();
         horizontalBox.add(horizontalGlue);
         
-        JButton btnNewButton_1 = new JButton("Editar");
-        horizontalBox.add(btnNewButton_1);
+        JButton btnEditar = new JButton("Editar");
+        btnEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                guiCompradorAgregarEditarLibro.setVisible(true);
+            }
+        });
+        horizontalBox.add(btnEditar);
         
         Component horizontalGlue_1 = Box.createHorizontalGlue();
         horizontalBox.add(horizontalGlue_1);
         
-        JButton btnNewButton_2 = new JButton("Eliminar");
-        horizontalBox.add(btnNewButton_2);
+        JButton btnEliminar = new JButton("Eliminar");
+        horizontalBox.add(btnEliminar);
         
         Component horizontalGlue_3 = Box.createHorizontalGlue();
         horizontalBox.add(horizontalGlue_3);
         
-        Component verticalStrut = Box.createVerticalStrut(20);
-        verticalBox.add(verticalStrut);
+        guiCompradorAgregarEditarLibro = new CompradorGUIAgregarEditarLibro();
     }
 
 }

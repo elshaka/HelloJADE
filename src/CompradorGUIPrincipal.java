@@ -1,10 +1,6 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.SpringLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -16,29 +12,29 @@ import java.awt.Component;
 
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JSeparator;
+
+
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.swing.BoxLayout;
-
-import java.awt.GridLayout;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
+import java.awt.Insets;
+
 @SuppressWarnings("serial")
-public class CompradorGUI extends JFrame {
+public class CompradorGUIPrincipal extends JFrame {
 
     private JPanel contentPane;
     private JTextField textFieldDineroDisponible;
     private Persona agente;
+    private CompradorGUILista guiCompradorLista;
 
     /**
      * Create the frame.
      */
-    public CompradorGUI(Persona comprador) {
+    public CompradorGUIPrincipal(Persona comprador) {
         setMinimumSize(new Dimension(250, 100));
         setMaximumSize(new Dimension(250, 100));
         setResizable(false);
@@ -74,10 +70,10 @@ public class CompradorGUI extends JFrame {
         textFieldDineroDisponible = new JTextField();
         textFieldDineroDisponible.setHorizontalAlignment(SwingConstants.RIGHT);
         textFieldDineroDisponible.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        textFieldDineroDisponible.setMinimumSize(new Dimension(100, 20));
-        textFieldDineroDisponible.setMaximumSize(new Dimension(100, 20));
+        textFieldDineroDisponible.setMinimumSize(new Dimension(110, 20));
+        textFieldDineroDisponible.setMaximumSize(new Dimension(110, 20));
         horizontalBox.add(textFieldDineroDisponible);
-        textFieldDineroDisponible.setPreferredSize(new Dimension(100, 20));
+        textFieldDineroDisponible.setPreferredSize(new Dimension(110, 20));
         textFieldDineroDisponible.setColumns(10);
         
         Component horizontalStrut_1 = Box.createHorizontalStrut(20);
@@ -105,12 +101,12 @@ public class CompradorGUI extends JFrame {
         Component horizontalGlue_4 = Box.createHorizontalGlue();
         horizontalBox_1.add(horizontalGlue_4);
         
-        JComboBox comboBoxLibros = new JComboBox();
-        comboBoxLibros.setMinimumSize(new Dimension(100, 20));
-        comboBoxLibros.setMaximumSize(new Dimension(200, 20));
-        horizontalBox_1.add(comboBoxLibros);
-        comboBoxLibros.setPreferredSize(new Dimension(100, 20));
-        comboBoxLibros.setModel(new DefaultComboBoxModel(new String[] {"Algebra Lineal", "Calculo II", "Fisica I", "Ingles II"}));
+        JComboBox comboBoxLibro = new JComboBox();
+        comboBoxLibro.setMinimumSize(new Dimension(92, 20));
+        comboBoxLibro.setMaximumSize(new Dimension(92, 20));
+        horizontalBox_1.add(comboBoxLibro);
+        comboBoxLibro.setPreferredSize(new Dimension(92, 20));
+        comboBoxLibro.setModel(new DefaultComboBoxModel(new String[] {"Algebra Lineal", "Calculo II", "Fisica I", "Ingles II"}));
         
         Component horizontalStrut_3 = Box.createHorizontalStrut(20);
         horizontalStrut_3.setPreferredSize(new Dimension(10, 0));
@@ -129,18 +125,25 @@ public class CompradorGUI extends JFrame {
         horizontalBox_2.add(horizontalGlue);
         
         JButton btnBuscar = new JButton("Buscar");
+        btnBuscar.setMargin(new Insets(2, 12, 2, 12));
         horizontalBox_2.add(btnBuscar);
-        btnBuscar.setMinimumSize(new Dimension(90, 23));
-        btnBuscar.setMaximumSize(new Dimension(90, 23));
-        btnBuscar.setPreferredSize(new Dimension(90, 23));
+        btnBuscar.setMinimumSize(new Dimension(78, 23));
+        btnBuscar.setMaximumSize(new Dimension(78, 23));
+        btnBuscar.setPreferredSize(new Dimension(78, 23));
         
         Component horizontalGlue_1 = Box.createHorizontalGlue();
         horizontalBox_2.add(horizontalGlue_1);
         
         JButton btnEditarLista = new JButton("Editar lista");
-        btnEditarLista.setMinimumSize(new Dimension(90, 23));
-        btnEditarLista.setMaximumSize(new Dimension(90, 23));
-        btnEditarLista.setPreferredSize(new Dimension(90, 23));
+        btnEditarLista.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                guiCompradorLista.setVisible(true);
+            }
+        });
+        btnEditarLista.setMargin(new Insets(2, 12, 2, 12));
+        btnEditarLista.setMinimumSize(new Dimension(78, 23));
+        btnEditarLista.setMaximumSize(new Dimension(78, 23));
+        btnEditarLista.setPreferredSize(new Dimension(78, 23));
         horizontalBox_2.add(btnEditarLista);
         
         Component horizontalGlue_2 = Box.createHorizontalGlue();
@@ -163,5 +166,7 @@ public class CompradorGUI extends JFrame {
                 agente.buscarLibro("titulo");
             }
         });
+        
+        guiCompradorLista = new CompradorGUILista();
     }
 }

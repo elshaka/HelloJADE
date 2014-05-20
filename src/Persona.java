@@ -19,7 +19,7 @@ import jade.proto.ContractNetResponder;
 
 @SuppressWarnings("serial")
 public class Persona extends Agent {
-    private CompradorGUI guiComprador;
+    private CompradorGUIPrincipal guiComprador;
     private VendedorGUI guiVendedor;
     public String papel;
     private String otraPersona;
@@ -31,7 +31,7 @@ public class Persona extends Agent {
             this.otraPersona = (String) args[0];
         }
 
-        guiComprador = new CompradorGUI(this);
+        guiComprador = new CompradorGUIPrincipal(this);
         guiVendedor = new VendedorGUI(this);
 
         // Registrar agente como "persona"
