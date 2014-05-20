@@ -31,7 +31,7 @@ public class CompradorGUILista extends JFrame {
      * Create the frame.
      */
     public CompradorGUILista() {
-        setTitle("Editar libros");
+        setTitle("Editar lista");
         setBounds(100, 100, 325, 170);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -75,6 +75,7 @@ public class CompradorGUILista extends JFrame {
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                guiCompradorAgregarEditarLibro.setTitle("Agregar libro");
                 guiCompradorAgregarEditarLibro.setVisible(true);
             }
         });
@@ -86,6 +87,7 @@ public class CompradorGUILista extends JFrame {
         JButton btnEditar = new JButton("Editar");
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                guiCompradorAgregarEditarLibro.setTitle("Editar libro");
                 guiCompradorAgregarEditarLibro.setVisible(true);
             }
         });

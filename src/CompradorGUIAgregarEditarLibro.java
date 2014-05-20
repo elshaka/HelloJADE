@@ -24,7 +24,6 @@ public class CompradorGUIAgregarEditarLibro extends JFrame {
      * Create the frame.
      */
     public CompradorGUIAgregarEditarLibro() {
-        setTitle("Agregar libro");
         setBounds(100, 100, 250, 120);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
