@@ -22,6 +22,10 @@ import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
+import javax.swing.JScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ListSelectionModel;
 
 
 public class VendedorGUI extends JFrame {
@@ -34,14 +38,16 @@ public class VendedorGUI extends JFrame {
     private JLabel lblArticulo;
     private JLabel lblPrecio;
     private JTable tableArticulos;
+    private JScrollPane scrollPane;
     private DefaultTableModel modelo;
+    private JButton btnEliminar;
     /**
      * Create the frame.
      */
     public VendedorGUI(Persona persona) {
         this.agente = persona;
         setTitle(agente.getLocalName() + " (Vendedor)");
-        setBounds(100, 100, 415, 319);
+        setBounds(100, 100, 415, 412);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         setContentPane(contentPane);
@@ -83,14 +89,28 @@ public class VendedorGUI extends JFrame {
         contentPane.add(btnNewButton);
         btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
         
-        modelo = new DefaultTableModel();
-        tableArticulos = new JTable(modelo);
-        tableArticulos.setBackground(Color.LIGHT_GRAY);
+        scrollPane = new JScrollPane();
+        scrollPane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent arg0) {
+                btnEliminar.setEnabled(true);
+            }
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 26, SpringLayout.SOUTH, btnNewButton);
+        sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 25, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -40, SpringLayout.SOUTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, txtArticulo);
+        contentPane.add(scrollPane);
+        
+        tableArticulos = new JTable();
+        tableArticulos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scrollPane.setViewportView(tableArticulos);
+        sl_contentPane.putConstraint(SpringLayout.WEST, tableArticulos, 34, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, tableArticulos, -44, SpringLayout.EAST, contentPane);
         tableArticulos.setShowVerticalLines(false);
+        tableArticulos.setBackground(Color.LIGHT_GRAY);
         sl_contentPane.putConstraint(SpringLayout.NORTH, tableArticulos, -163, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, tableArticulos, 25, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, tableArticulos, -10, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, tableArticulos, -53, SpringLayout.EAST, contentPane);
         tableArticulos.setModel(new DefaultTableModel(
             new Object[][] {
             },
@@ -98,8 +118,22 @@ public class VendedorGUI extends JFrame {
                 "Articulo", "Precio"
             }
         ));
-        contentPane.add(tableArticulos);
         
+        btnEliminar = new JButton("Eliminar");
+        btnEliminar.setEnabled(false);
+        btnEliminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int SelectedRow = tableArticulos.getSelectedRow();
+                DefaultTableModel modelTable = (DefaultTableModel) tableArticulos.getModel();
+                if(SelectedRow != -1){
+                    modelTable.removeRow(SelectedRow);
+                }
+            }
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnEliminar, 7, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnEliminar, -83, SpringLayout.EAST, contentPane);
+        contentPane.add(btnEliminar);
+        modelo = (DefaultTableModel) tableArticulos.getModel();
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 int numCols = tableArticulos.getModel().getColumnCount();
