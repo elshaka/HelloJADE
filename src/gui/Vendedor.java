@@ -85,10 +85,12 @@ public class Vendedor extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
                 Libro libro = agregarLibro.mostrar();
-                if(libro != null && !getLibros().contains(libro)) {
-                    modeloTablaLibros.agregarLibro(libro);
-                } else {
-                    JOptionPane.showMessageDialog(Vendedor.this, "El libro '" + libro.getNombre() + "' ya existe");
+                if(libro != null) {
+                    if(!getLibros().contains(libro)) {
+                        modeloTablaLibros.agregarLibro(libro);
+                    } else {
+                        JOptionPane.showMessageDialog(Vendedor.this, "El libro '" + libro.getNombre() + "' ya existe");
+                    }
                 }
             }
         });
