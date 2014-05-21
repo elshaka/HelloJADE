@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
@@ -84,8 +85,10 @@ public class Vendedor extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
                 Libro libro = agregarLibro.mostrar();
-                if(libro != null) {
+                if(libro != null && !getLibros().contains(libro)) {
                     modeloTablaLibros.agregarLibro(libro);
+                } else {
+                    JOptionPane.showMessageDialog(Vendedor.this, "El libro '" + libro.getNombre() + "' ya existe");
                 }
             }
         });
@@ -101,7 +104,7 @@ public class Vendedor extends JFrame {
                 int selectedRow = tablaLibros.getSelectedRow();
                 if (selectedRow > -1) {
                     Libro libroEditado = modeloTablaLibros.getLibro(selectedRow);
-                    VendedorLibro editarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, libroEditado);
+                    VendedorLibro editarLibro = new VendedorLibro(Vendedor.this, "Editar libro", true, libroEditado);
                     libroEditado = editarLibro.mostrar();
                     modeloTablaLibros.actualizarLibro(selectedRow, libroEditado);
                 }

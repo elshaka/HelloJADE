@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import modelos.Libro;
 import jade.core.*;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -156,12 +157,12 @@ public class Persona extends Agent {
         }
     }
 
-    public void buscarLibro(String titulo) {
+    public void buscarLibro(Libro libro) {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         msg.addReceiver(new AID(this.otraPersona, AID.ISLOCALNAME));
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
-        msg.setContent(titulo);
+        msg.setContent(libro.getNombre());
 
         addBehaviour(new ContractNetInitiator(this, msg) {
             protected void handlePropose(ACLMessage propose, Vector v) {

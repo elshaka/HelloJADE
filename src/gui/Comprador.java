@@ -14,12 +14,20 @@ import javax.swing.JButton;
 
 
 
+
+
+
+
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
+import modelos.Libro;
+import modelos.ValidadorNombre;
+import modelos.ValidadorPrecio;
 import agentes.Persona;
 
 import java.awt.Insets;
@@ -28,9 +36,9 @@ import java.awt.Insets;
 public class Comprador extends JFrame {
 
     private JPanel contentPane;
-    private JTextField textFieldDineroDisponible;
     private Persona agente;
-    private JTextField textFieldLibro;
+    private JTextField textFieldDineroDisponible;
+    private JTextField textFieldNombre;
 
     /**
      * Create the frame.
@@ -71,6 +79,7 @@ public class Comprador extends JFrame {
         horizontalBox.add(textFieldDineroDisponible);
         textFieldDineroDisponible.setPreferredSize(new Dimension(110, 20));
         textFieldDineroDisponible.setColumns(10);
+        textFieldDineroDisponible.setInputVerifier(new ValidadorPrecio());
         
         Component horizontalStrut_1 = Box.createHorizontalStrut(20);
         horizontalStrut_1.setPreferredSize(new Dimension(10, 0));
@@ -97,11 +106,12 @@ public class Comprador extends JFrame {
         Component horizontalStrut_4 = Box.createHorizontalStrut(20);
         horizontalBox_1.add(horizontalStrut_4);
         
-        textFieldLibro = new JTextField();
-        textFieldLibro.setPreferredSize(new Dimension(600, 20));
-        textFieldLibro.setMaximumSize(new Dimension(600, 20));
-        horizontalBox_1.add(textFieldLibro);
-        textFieldLibro.setColumns(10);
+        textFieldNombre = new JTextField();
+        textFieldNombre.setPreferredSize(new Dimension(600, 20));
+        textFieldNombre.setMaximumSize(new Dimension(600, 20));
+        horizontalBox_1.add(textFieldNombre);
+        textFieldNombre.setColumns(10);
+        textFieldNombre.setInputVerifier(new ValidadorNombre());
         
         Component horizontalStrut_3 = Box.createHorizontalStrut(20);
         horizontalStrut_3.setPreferredSize(new Dimension(10, 0));
@@ -137,14 +147,20 @@ public class Comprador extends JFrame {
             gl_contentPane.createParallelGroup(Alignment.LEADING)
                 .addComponent(verticalBox, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
         );
-        
-        Component verticalGlue_1 = Box.createVerticalGlue();
-        verticalBox.add(verticalGlue_1);
         contentPane.setLayout(gl_contentPane);
         btnBuscar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                agente.buscarLibro("titulo");
+                if(validarCampos()) {
+                    Libro libro = new Libro(textFieldNombre.getText().trim(),
+                            Integer.parseInt(textFieldDineroDisponible.getText()));
+                    agente.buscarLibro(libro);
+                }
             }
         });
+    }
+
+    private boolean validarCampos() {
+        return textFieldNombre.getInputVerifier().verify(textFieldNombre)
+                && textFieldDineroDisponible.getInputVerifier().verify(textFieldDineroDisponible);
     }
 }

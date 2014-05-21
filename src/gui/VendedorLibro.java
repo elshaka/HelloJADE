@@ -17,6 +17,8 @@ import java.awt.Dimension;
 import javax.swing.BoxLayout;
 
 import modelos.Libro;
+import modelos.ValidadorNombre;
+import modelos.ValidadorPrecio;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
@@ -59,6 +61,7 @@ public class VendedorLibro extends JDialog {
                     textFieldNombre.setMaximumSize(new Dimension(2147483647, 20));
                     horizontalBox.add(textFieldNombre);
                     textFieldNombre.setColumns(10);
+                    textFieldNombre.setInputVerifier(new ValidadorNombre());
                 }
             }
             {
@@ -87,6 +90,7 @@ public class VendedorLibro extends JDialog {
                     textFieldPrecio.setMaximumSize(new Dimension(2147483647, 20));
                     horizontalBox.add(textFieldPrecio);
                     textFieldPrecio.setColumns(10);
+                    textFieldPrecio.setInputVerifier(new ValidadorPrecio());
                 }
             }
             {
@@ -137,38 +141,6 @@ public class VendedorLibro extends JDialog {
                 }
             }
         }
-
-        // Validador de nombre (No puede ser vacío)
-        textFieldNombre.setInputVerifier(new InputVerifier() {
-            public boolean verify(JComponent comp) {
-                JTextField textField = (JTextField) comp;
-
-                boolean valido = textField.getText().trim().length() > 0;
-
-                Color color = valido ? null : Color.red;
-                comp.setBorder(BorderFactory.createLineBorder(color));
-
-                return valido;
-            }
-        });
-
-        // Validador de precio (Debe ser un número entero no negativo)
-        textFieldPrecio.setInputVerifier(new InputVerifier() {
-            public boolean verify(JComponent comp) {
-                JTextField textField = (JTextField) comp;
-
-                boolean valido = false;
-                try {
-                    int precio = Integer.parseInt(textField.getText());
-                    valido = precio >= 0;
-                } catch (NumberFormatException e) {}
-
-                Color color = valido ? null : Color.red;
-                comp.setBorder(BorderFactory.createLineBorder(color));
-
-                return valido;
-            }
-        });
 
         // Cargar libro (en caso de edición)
         if(libro != null) {
