@@ -1,4 +1,7 @@
 package gui;
+
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -8,23 +11,24 @@ import javax.swing.BoxLayout;
 import javax.swing.Box;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.JButton;
 
 import java.awt.Dimension;
 import java.awt.Component;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import modelos.Libro;
 
 @SuppressWarnings("serial")
 public class Vendedor extends JFrame {
 
     private JPanel contentPane;
-    private JTable tableLibros;
+    private JTable tablaLibros;
     private agentes.Persona agente;
     private JButton btnEliminar;
-    private DefaultTableModel modelTable;
+    private ModeloTablaLibros modeloTablaLibros;
     private JButton btnEditar;
 
     /**
@@ -54,33 +58,24 @@ public class Vendedor extends JFrame {
         
         JScrollPane scrollPane = new JScrollPane();
         verticalBox.add(scrollPane);
-        
-        tableLibros = new JTable();
 
-        tableLibros.setModel(new DefaultTableModel(
-            new Object[][] {
-                {"Harry Potter", "1000"},
-            },
-            new String[] {
-                "Libro", "Precio Bs."
-            }
-        ));
-        tableLibros.getColumnModel().getColumn(0).setPreferredWidth(225);
-        scrollPane.setViewportView(tableLibros);
+        modeloTablaLibros = new ModeloTablaLibros(new ArrayList<Libro>());
 
-        tableLibros.setColumnSelectionAllowed(false);
-        tableLibros.setRowSelectionAllowed(true);
-        tableLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        tablaLibros = new JTable();
+        tablaLibros.setModel(modeloTablaLibros);
+        scrollPane.setViewportView(tablaLibros);
+
+        tablaLibros.setColumnSelectionAllowed(false);
+        tablaLibros.setRowSelectionAllowed(true);
+        tablaLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
-                boolean enable = tableLibros.getSelectedRow() > -1;
+                boolean enable = tablaLibros.getSelectedRow() > -1;
                 btnEditar.setEnabled(enable);
                 btnEliminar.setEnabled(enable);
             }
         });
 
-        modelTable = (DefaultTableModel) tableLibros.getModel();
-        
         Box horizontalBox = Box.createHorizontalBox();
         verticalBox.add(horizontalBox);
 
@@ -88,9 +83,9 @@ public class Vendedor extends JFrame {
         btnAgregar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
-                Object[] libro = agregarLibro.mostrar();
+                Libro libro = agregarLibro.mostrar();
                 if(libro != null) {
-                    modelTable.addRow(libro);
+                    modeloTablaLibros.agregarLibro(libro);
                 }
             }
         });
@@ -103,15 +98,12 @@ public class Vendedor extends JFrame {
         btnEditar.setEnabled(false);
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = tableLibros.getSelectedRow();
+                int selectedRow = tablaLibros.getSelectedRow();
                 if (selectedRow > -1) {
-                    Object[] libro = new Object[] {modelTable.getValueAt(selectedRow, 0), 
-                            modelTable.getValueAt(selectedRow, 1)
-                    };
-                    VendedorLibro editarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, libro);
-                    libro = editarLibro.mostrar();
-                    modelTable.setValueAt(libro[0], selectedRow, 0);
-                    modelTable.setValueAt(libro[1], selectedRow, 1);
+                    Libro libroEditado = modeloTablaLibros.getLibro(selectedRow);
+                    VendedorLibro editarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, libroEditado);
+                    libroEditado = editarLibro.mostrar();
+                    modeloTablaLibros.actualizarLibro(selectedRow, libroEditado);
                 }
             }
         });
@@ -127,9 +119,9 @@ public class Vendedor extends JFrame {
         
         btnEliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = tableLibros.getSelectedRow();
+                int selectedRow = tablaLibros.getSelectedRow();
                 if (selectedRow > -1) {
-                    modelTable.removeRow(selectedRow);
+                    modeloTablaLibros.eliminarLibro(selectedRow);
                 }
             }
         });
@@ -142,6 +134,78 @@ public class Vendedor extends JFrame {
         Component horizontalStrut_1 = Box.createHorizontalStrut(20);
         horizontalStrut_1.setMaximumSize(new Dimension(20, 0));
         contentPane.add(horizontalStrut_1);
+    }
+
+    // Metodo que usaría el agente comprador para obtener sus libros
+    public ArrayList<Libro> getLibros() {
+        return modeloTablaLibros.getLibros();
+    }
+
+    // Modelo de tabla tuning para manejar libros 
+    private class ModeloTablaLibros extends AbstractTableModel {
+        private ArrayList<Libro> libros;
+        private String[] columnas = {"Título", "Precio"};
+
+        public ModeloTablaLibros(ArrayList<Libro> libros) {
+            super();
+            this.libros = libros;
+        }
+
+        public String getColumnName(int col) {
+            return columnas[col];
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnas.length;
+        }
+
+        @Override
+        public int getRowCount() {
+            return libros.size();
+        }
+
+        @Override
+        public Object getValueAt(int row, int col) {
+            Object object = null;
+            switch(col) {
+            case 0:
+                object = (Object) libros.get(row).getNombre();
+                break;
+            case 1:
+                object = (Object) libros.get(row).getPrecio();
+                break;
+            }
+            return object;
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            return false;
+        }
+
+        public void agregarLibro(Libro libro) {
+            libros.add(libro);
+            fireTableDataChanged();
+        }
+
+        public Libro getLibro(int index) {
+            return libros.get(index);
+        }
+
+        public void actualizarLibro(int index, Libro libroActualizado) {
+            libros.set(index, libroActualizado);
+            fireTableDataChanged();
+        }
+
+        public void eliminarLibro(int index) {
+            libros.remove(index);
+            fireTableDataChanged();
+        }
+
+        public ArrayList<Libro> getLibros() {
+            return libros;
+        }
     }
 
 }

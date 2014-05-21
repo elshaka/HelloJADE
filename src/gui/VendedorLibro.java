@@ -16,6 +16,8 @@ import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 
+import modelos.Libro;
+
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -24,12 +26,12 @@ import java.awt.event.ActionEvent;
 public class VendedorLibro extends JDialog {
     private JTextField textFieldNombre;
     private JTextField textFieldPrecio;
-    private Object[] libro;
+    private Libro libro;
 
     /**
      * Create the dialog.
      */
-    public VendedorLibro(JFrame parent, String titulo, boolean modal, Object[] libro) {
+    public VendedorLibro(JFrame parent, String titulo, boolean modal, Libro libro) {
         super(parent, titulo, modal);
         this.libro = libro;
 
@@ -105,12 +107,9 @@ public class VendedorLibro extends JDialog {
                     JButton btnAceptar = new JButton("Aceptar");
                     btnAceptar.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent arg0) {
-                            // Validar campos
                             if(validarCampos()) {
-                                VendedorLibro.this.libro = new Object[] {
-                                        textFieldNombre.getText(),
-                                        textFieldPrecio.getText(),
-                                };
+                                VendedorLibro.this.libro = new Libro(textFieldNombre.getText().trim(),
+                                        Integer.parseInt(textFieldPrecio.getText().trim()));
                                 setVisible(false);
                             } else {
                                 JOptionPane.showMessageDialog(VendedorLibro.this, "Campos inválidos");
@@ -173,12 +172,12 @@ public class VendedorLibro extends JDialog {
 
         // Cargar libro (en caso de edición)
         if(libro != null) {
-            textFieldNombre.setText((String) libro[0]);
-            textFieldPrecio.setText((String) libro[1]);
+            textFieldNombre.setText(libro.getNombre());
+            textFieldPrecio.setText(Integer.toString(libro.getPrecio()));
         }
     }
 
-    public Object[] mostrar() {
+    public Libro mostrar() {
         setVisible(true);
         return libro;
     }
