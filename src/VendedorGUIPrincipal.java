@@ -115,6 +115,9 @@ public class VendedorGUIPrincipal extends JFrame {
                 if (tableLibros.getSelectedRow() > -1) {
                     btnEliminar.setEnabled(true);
                 }
+                else {
+                    btnEliminar.setEnabled(false);
+                }
             }
         });
         
