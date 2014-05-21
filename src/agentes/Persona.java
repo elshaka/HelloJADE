@@ -33,6 +33,8 @@ public class Persona extends Agent {
         Object[] args = this.getArguments();
         if (args != null && args.length > 0) {
             this.otraPersona = (String) args[0];
+        } else {
+            this.otraPersona = this.getLocalName() + "Destino";
         }
 
         guiComprador = new gui.Comprador(this);
