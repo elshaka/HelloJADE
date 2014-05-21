@@ -26,6 +26,7 @@ public class CompradorGUILista extends JFrame {
     private JPanel contentPane;
     private JTable table;
     private CompradorGUIAgregarEditarLibro guiCompradorAgregarEditarLibro;
+    private VendedorGUIAgregarEditarLibro guiCompradorAgregarEditarLibroJDialog;
 
     /**
      * Create the frame.

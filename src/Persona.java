@@ -20,7 +20,8 @@ import jade.proto.ContractNetResponder;
 @SuppressWarnings("serial")
 public class Persona extends Agent {
     private CompradorGUIPrincipal guiComprador;
-    private VendedorGUI guiVendedor;
+//    private VendedorGUI guiVendedor;
+    private VendedorGUIPrincipal guiVendedorPrincipal;
     public String papel;
     private String otraPersona;
 
@@ -32,7 +33,8 @@ public class Persona extends Agent {
         }
 
         guiComprador = new CompradorGUIPrincipal(this);
-        guiVendedor = new VendedorGUI(this);
+//        guiVendedor = new VendedorGUI(this);
+        guiVendedorPrincipal = new VendedorGUIPrincipal(this);
 
         // Registrar agente como "persona"
         DFAgentDescription dfd = new DFAgentDescription();
@@ -100,7 +102,8 @@ public class Persona extends Agent {
     protected void takeDown() {
         // Eliminar la GUI
         this.guiComprador = null;
-        this.guiVendedor = null;
+//        this.guiVendedor = null;
+        this.guiVendedorPrincipal = null;
         // Eliminar agente del registro
         try {
             DFService.deregister(this);
@@ -136,7 +139,8 @@ public class Persona extends Agent {
             guiComprador.setVisible(true);
             break;
         case "Vendedor":
-            guiVendedor.setVisible(true);
+//            guiVendedor.setVisible(true);
+            guiVendedorPrincipal.setVisible(true);
             break;
         }
     }
@@ -145,8 +149,8 @@ public class Persona extends Agent {
         if (this.guiComprador != null) {
             this.guiComprador.setVisible(false);
         }
-        if (this.guiVendedor != null) {
-            this.guiVendedor.setVisible(false);
+        if (this.guiVendedorPrincipal != null) {
+            this.guiVendedorPrincipal.setVisible(false);
         }
     }
 

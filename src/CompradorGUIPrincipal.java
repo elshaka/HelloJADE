@@ -30,6 +30,7 @@ public class CompradorGUIPrincipal extends JFrame {
     private JTextField textFieldDineroDisponible;
     private Persona agente;
     private CompradorGUILista guiCompradorLista;
+    private JTextField textFieldLibro;
 
     /**
      * Create the frame.
@@ -41,7 +42,7 @@ public class CompradorGUIPrincipal extends JFrame {
         agente = comprador;
         setTitle(agente.getLocalName() + " (Comprador)");
         setPreferredSize(new Dimension(250, 100));
-        setBounds(100, 100, 270, 150);
+        setBounds(100, 100, 240, 150);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -67,7 +68,6 @@ public class CompradorGUIPrincipal extends JFrame {
         horizontalBox.add(horizontalGlue_3);
         
         textFieldDineroDisponible = new JTextField();
-        textFieldDineroDisponible.setHorizontalAlignment(SwingConstants.RIGHT);
         textFieldDineroDisponible.setAlignmentX(Component.RIGHT_ALIGNMENT);
         textFieldDineroDisponible.setMinimumSize(new Dimension(110, 20));
         textFieldDineroDisponible.setMaximumSize(new Dimension(110, 20));
@@ -97,15 +97,14 @@ public class CompradorGUIPrincipal extends JFrame {
         JLabel lblLibro = new JLabel("Libro");
         horizontalBox_1.add(lblLibro);
         
-        Component horizontalGlue_4 = Box.createHorizontalGlue();
-        horizontalBox_1.add(horizontalGlue_4);
+        Component horizontalStrut_4 = Box.createHorizontalStrut(20);
+        horizontalBox_1.add(horizontalStrut_4);
         
-        JComboBox comboBoxLibro = new JComboBox();
-        comboBoxLibro.setMinimumSize(new Dimension(92, 20));
-        comboBoxLibro.setMaximumSize(new Dimension(92, 20));
-        horizontalBox_1.add(comboBoxLibro);
-        comboBoxLibro.setPreferredSize(new Dimension(92, 20));
-        comboBoxLibro.setModel(new DefaultComboBoxModel(new String[] {"Algebra Lineal", "Calculo II", "Fisica I", "Ingles II"}));
+        textFieldLibro = new JTextField();
+        textFieldLibro.setPreferredSize(new Dimension(600, 20));
+        textFieldLibro.setMaximumSize(new Dimension(600, 20));
+        horizontalBox_1.add(textFieldLibro);
+        textFieldLibro.setColumns(10);
         
         Component horizontalStrut_3 = Box.createHorizontalStrut(20);
         horizontalStrut_3.setPreferredSize(new Dimension(10, 0));
@@ -132,21 +131,6 @@ public class CompradorGUIPrincipal extends JFrame {
         
         Component horizontalGlue_1 = Box.createHorizontalGlue();
         horizontalBox_2.add(horizontalGlue_1);
-        
-        JButton btnEditarLista = new JButton("Editar lista");
-        btnEditarLista.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                guiCompradorLista.setVisible(true);
-            }
-        });
-        btnEditarLista.setMargin(new Insets(2, 12, 2, 12));
-        btnEditarLista.setMinimumSize(new Dimension(78, 23));
-        btnEditarLista.setMaximumSize(new Dimension(78, 23));
-        btnEditarLista.setPreferredSize(new Dimension(78, 23));
-        horizontalBox_2.add(btnEditarLista);
-        
-        Component horizontalGlue_2 = Box.createHorizontalGlue();
-        horizontalBox_2.add(horizontalGlue_2);
         GroupLayout gl_contentPane = new GroupLayout(contentPane);
         gl_contentPane.setHorizontalGroup(
             gl_contentPane.createParallelGroup(Alignment.LEADING)
