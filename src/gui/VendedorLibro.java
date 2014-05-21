@@ -56,12 +56,6 @@ public class VendedorLibro extends JDialog {
                 }
                 {
                     textFieldNombre = new JTextField();
-                    textFieldNombre.addKeyListener(new KeyAdapter() {
-                        @Override
-                        public void keyPressed(KeyEvent e) {
-                            textFieldNombre.validate();
-                        }
-                    });
                     textFieldNombre.setMaximumSize(new Dimension(2147483647, 20));
                     horizontalBox.add(textFieldNombre);
                     textFieldNombre.setColumns(10);
@@ -90,12 +84,6 @@ public class VendedorLibro extends JDialog {
                 }
                 {
                     textFieldPrecio = new JTextField();
-                    textFieldPrecio.addKeyListener(new KeyAdapter() {
-                        @Override
-                        public void keyPressed(KeyEvent e) {
-                            textFieldPrecio.validate();
-                        }
-                    });
                     textFieldPrecio.setMaximumSize(new Dimension(2147483647, 20));
                     horizontalBox.add(textFieldPrecio);
                     textFieldPrecio.setColumns(10);
