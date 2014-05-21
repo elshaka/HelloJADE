@@ -1,11 +1,9 @@
+package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 import java.awt.Dimension;
 import java.awt.Component;
@@ -15,30 +13,29 @@ import javax.swing.JButton;
 
 
 
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
+import agentes.Persona;
+
 import java.awt.Insets;
 
 @SuppressWarnings("serial")
-public class CompradorGUIPrincipal extends JFrame {
+public class Comprador extends JFrame {
 
     private JPanel contentPane;
     private JTextField textFieldDineroDisponible;
     private Persona agente;
-    private CompradorGUILista guiCompradorLista;
     private JTextField textFieldLibro;
 
     /**
      * Create the frame.
      */
-    public CompradorGUIPrincipal(Persona comprador) {
-        setMinimumSize(new Dimension(250, 100));
-        setMaximumSize(new Dimension(250, 100));
-        setResizable(false);
+    public Comprador(Persona comprador) {
         agente = comprador;
         setTitle(agente.getLocalName() + " (Comprador)");
         setPreferredSize(new Dimension(250, 100));
@@ -149,7 +146,5 @@ public class CompradorGUIPrincipal extends JFrame {
                 agente.buscarLibro("titulo");
             }
         });
-        
-        guiCompradorLista = new CompradorGUILista();
     }
 }

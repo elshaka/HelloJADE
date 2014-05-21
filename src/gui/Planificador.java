@@ -1,3 +1,4 @@
+package gui;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,19 +16,19 @@ import java.util.Iterator;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.PopupMenuEvent;
 
-@SuppressWarnings("serial")
-public class PlanificadorGUI extends JFrame {
+@SuppressWarnings({"serial", "rawtypes", "unchecked"})
+public class Planificador extends JFrame {
 
     private JPanel contentPane;
-    private Planificador agente;
+    private agentes.Planificador agente;
     private JComboBox comboBox_Agente;
     private JComboBox comboBox_Papel;
     private JButton btnAplicar;
     /**
      * Create the frame.
      */
-    public PlanificadorGUI(Planificador planificador) {
-        agente= planificador;
+    public Planificador(agentes.Planificador planificador) {
+        agente = planificador;
         setTitle(agente.getLocalName() + " (Planificador)");
         setBounds(100, 100, 250, 142);
         contentPane = new JPanel();
@@ -46,11 +47,10 @@ public class PlanificadorGUI extends JFrame {
         contentPane.add(lblPapel);
         comboBox_Agente = new JComboBox();
         comboBox_Agente.addPopupMenuListener(new PopupMenuListener() {
-            public void popupMenuCanceled(PopupMenuEvent arg0) {
-            }
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-            }
-            
+            public void popupMenuCanceled(PopupMenuEvent arg0) {}
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {}
+
             public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
                 comboBox_Agente.removeAllItems();
                 ArrayList<String> personas = agente.buscarPersonas();

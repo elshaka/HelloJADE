@@ -1,3 +1,5 @@
+package agentes;
+
 import java.util.ArrayList;
 
 import jade.core.*;
@@ -16,7 +18,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 @SuppressWarnings("serial")
 public class Planificador extends Agent {
-    private PlanificadorGUI gui= null;
+    private gui.Planificador gui;
     
     protected void setup() {
         System.out.println(this.getLocalName() + " iniciado");
@@ -39,7 +41,7 @@ public class Planificador extends Agent {
            // handle exception
         }
         
-        gui = new PlanificadorGUI(this);
+        gui = new gui.Planificador(this);
         gui.setVisible(true);
     }
 
@@ -47,7 +49,7 @@ public class Planificador extends Agent {
         System.out.println(this.getLocalName() + " terminado");
     }
 
-    ArrayList<String> buscarPersonas() {
+    public ArrayList<String> buscarPersonas() {
         ArrayList<String> personas = new ArrayList<String>();
 
         DFAgentDescription dfd = new DFAgentDescription();
@@ -67,7 +69,7 @@ public class Planificador extends Agent {
     }
     
     // Inicia el protocolo FIPARequest para asignar el papel a una persona
-    void aplicarPapel(String persona, String papel){
+    public void aplicarPapel(String persona, String papel){
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID((String) persona, AID.ISLOCALNAME));
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);

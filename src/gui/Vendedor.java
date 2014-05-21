@@ -1,6 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
+package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -15,30 +13,27 @@ import javax.swing.JButton;
 
 import java.awt.Dimension;
 import java.awt.Component;
-import java.awt.Rectangle;
-
-import javax.swing.ListSelectionModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class VendedorGUIPrincipal extends JFrame {
+@SuppressWarnings("serial")
+public class Vendedor extends JFrame {
 
     private JPanel contentPane;
     private JTable tableLibros;
-    private Persona agente;
+    private agentes.Persona agente;
     private JButton btnEliminar;
-    private VendedorGUIAgregarEditarLibro guiVendedorAgregarEditarLibro;
-    private JOptionPaneMultiInput dialog;
-    private String[] arg;
+    private DefaultTableModel modelTable;
+    private JButton btnEditar;
 
     /**
      * Create the frame.
      */
-    public VendedorGUIPrincipal(Persona persona) {
+    public Vendedor(agentes.Persona persona) {
         this.agente = persona;
         setTitle(agente.getLocalName() + " (Vendedor)");
-        setBounds(100, 100, 350, 310);
+        setBounds(100, 100, 404, 330);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -61,7 +56,7 @@ public class VendedorGUIPrincipal extends JFrame {
         verticalBox.add(scrollPane);
         
         tableLibros = new JTable();
-        tableLibros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         tableLibros.setModel(new DefaultTableModel(
             new Object[][] {
                 {"Harry Potter", "1000"},
@@ -72,12 +67,19 @@ public class VendedorGUIPrincipal extends JFrame {
         ));
         tableLibros.getColumnModel().getColumn(0).setPreferredWidth(225);
         scrollPane.setViewportView(tableLibros);
-        
-        Component verticalStrut = Box.createVerticalStrut(20);
-        verticalStrut.setPreferredSize(new Dimension(0, 15));
-        verticalStrut.setMinimumSize(new Dimension(0, 15));
-        verticalStrut.setMaximumSize(new Dimension(0, 15));
-        verticalBox.add(verticalStrut);
+
+        tableLibros.setColumnSelectionAllowed(false);
+        tableLibros.setRowSelectionAllowed(true);
+        tableLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                boolean enable = tableLibros.getSelectedRow() > -1;
+                btnEditar.setEnabled(enable);
+                btnEliminar.setEnabled(enable);
+            }
+        });
+
+        modelTable = (DefaultTableModel) tableLibros.getModel();
         
         Box horizontalBox = Box.createHorizontalBox();
         verticalBox.add(horizontalBox);
@@ -85,7 +87,11 @@ public class VendedorGUIPrincipal extends JFrame {
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                guiVendedorAgregarEditarLibro.setVisible(true);
+                VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
+                Object[] libro = agregarLibro.mostrar();
+                if(libro != null) {
+                    modelTable.addRow(libro);
+                }
             }
         });
         horizontalBox.add(btnAgregar);
@@ -93,15 +99,25 @@ public class VendedorGUIPrincipal extends JFrame {
         Component horizontalGlue = Box.createHorizontalGlue();
         horizontalBox.add(horizontalGlue);
         
-        JButton btnEditar = new JButton("Editar");
+        btnEditar = new JButton("Editar");
+        btnEditar.setEnabled(false);
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dialog.main(arg);
+                int selectedRow = tableLibros.getSelectedRow();
+                if (selectedRow > -1) {
+                    Object[] libro = new Object[] {modelTable.getValueAt(selectedRow, 0), 
+                            modelTable.getValueAt(selectedRow, 1)
+                    };
+                    VendedorLibro editarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, libro);
+                    libro = editarLibro.mostrar();
+                    modelTable.setValueAt(libro[0], selectedRow, 0);
+                    modelTable.setValueAt(libro[1], selectedRow, 1);
+                }
             }
         });
-        btnEditar.setPreferredSize(new Dimension(71, 23));
-        btnEditar.setMinimumSize(new Dimension(71, 23));
-        btnEditar.setMaximumSize(new Dimension(71, 23));
+        btnEditar.setPreferredSize(new Dimension(100, 23));
+        btnEditar.setMinimumSize(new Dimension(100, 23));
+        btnEditar.setMaximumSize(new Dimension(100, 23));
         horizontalBox.add(btnEditar);
         
         Component horizontalGlue_1 = Box.createHorizontalGlue();
@@ -109,44 +125,23 @@ public class VendedorGUIPrincipal extends JFrame {
         btnEliminar = new JButton("Eliminar");
         btnEliminar.setEnabled(false);
         
-        tableLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent event) {
-                if (tableLibros.getSelectedRow() > -1) {
-                    btnEliminar.setEnabled(true);
-                }
-                else {
-                    btnEliminar.setEnabled(false);
-                }
-            }
-        });
-        
         btnEliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = tableLibros.getSelectedRow();
-                DefaultTableModel modelTable = (DefaultTableModel) tableLibros.getModel();
                 if (selectedRow > -1) {
                     modelTable.removeRow(selectedRow);
                 }
             }
         });
         
-        btnEliminar.setPreferredSize(new Dimension(71, 23));
-        btnEliminar.setMinimumSize(new Dimension(71, 23));
-        btnEliminar.setMaximumSize(new Dimension(71, 23));
+        btnEliminar.setPreferredSize(new Dimension(100, 23));
+        btnEliminar.setMinimumSize(new Dimension(100, 23));
+        btnEliminar.setMaximumSize(new Dimension(100, 23));
         horizontalBox.add(btnEliminar);
-        
-        Component verticalStrut_2 = Box.createVerticalStrut(20);
-        verticalStrut_2.setPreferredSize(new Dimension(0, 10));
-        verticalStrut_2.setMinimumSize(new Dimension(0, 10));
-        verticalStrut_2.setMaximumSize(new Dimension(0, 10));
-        verticalBox.add(verticalStrut_2);
         
         Component horizontalStrut_1 = Box.createHorizontalStrut(20);
         horizontalStrut_1.setMaximumSize(new Dimension(20, 0));
         contentPane.add(horizontalStrut_1);
-        
-        guiVendedorAgregarEditarLibro = new VendedorGUIAgregarEditarLibro();
     }
 
 }
