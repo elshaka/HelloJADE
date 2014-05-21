@@ -1,5 +1,6 @@
 package agentes;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Vector;
@@ -23,8 +24,7 @@ import jade.proto.ContractNetResponder;
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class Persona extends Agent {
     private gui.Comprador guiComprador;
-//    private VendedorGUI guiVendedor;
-    private gui.Vendedor guiVendedorPrincipal;
+    private gui.Vendedor guiVendedor;
     public String papel;
     private String otraPersona;
 
@@ -38,8 +38,7 @@ public class Persona extends Agent {
         }
 
         guiComprador = new gui.Comprador(this);
-//        guiVendedor = new VendedorGUI(this);
-        guiVendedorPrincipal = new gui.Vendedor(this);
+        guiVendedor = new gui.Vendedor(this);
 
         // Registrar agente como "persona"
         DFAgentDescription dfd = new DFAgentDescription();
@@ -61,6 +60,8 @@ public class Persona extends Agent {
         );
         addBehaviour(new ContractNetResponder(this, template) {
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
+                ArrayList<Libro> libros = guiVendedor.getLibros();
+
                 ACLMessage propose = cfp.createReply();
                 propose.setPerformative(ACLMessage.PROPOSE);
                 propose.setContent(String.valueOf(1000));
@@ -107,8 +108,7 @@ public class Persona extends Agent {
     protected void takeDown() {
         // Eliminar la GUI
         this.guiComprador = null;
-//        this.guiVendedor = null;
-        this.guiVendedorPrincipal = null;
+        this.guiVendedor = null;
         // Eliminar agente del registro
         try {
             DFService.deregister(this);
@@ -144,8 +144,7 @@ public class Persona extends Agent {
             guiComprador.setVisible(true);
             break;
         case "Vendedor":
-//            guiVendedor.setVisible(true);
-            guiVendedorPrincipal.setVisible(true);
+            guiVendedor.setVisible(true);
             break;
         }
     }
@@ -154,8 +153,8 @@ public class Persona extends Agent {
         if (this.guiComprador != null) {
             this.guiComprador.setVisible(false);
         }
-        if (this.guiVendedorPrincipal != null) {
-            this.guiVendedorPrincipal.setVisible(false);
+        if (this.guiVendedor != null) {
+            this.guiVendedor.setVisible(false);
         }
     }
 
@@ -204,9 +203,5 @@ public class Persona extends Agent {
                 System.out.println("Se realizó la compra del libro al vendedor " + inform.getSender().getLocalName());
             }
         });
-    }
-
-    public void venderLibro(String titulo, String precio) {
-        // TODO Auto-generated method stub
     }
 }
