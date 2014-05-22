@@ -2,7 +2,6 @@ package gui;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 

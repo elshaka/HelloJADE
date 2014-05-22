@@ -14,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.JButton;
 
-import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -43,23 +42,23 @@ public class Vendedor extends JFrame {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
         modeloTablaLibros = new ModeloTablaLibros(new ArrayList<Libro>());
-        
-                JScrollPane scrollPane = new JScrollPane();
-                contentPane.add(scrollPane);
-                
-                        tablaLibros = new JTable();
-                        tablaLibros.setModel(modeloTablaLibros);
-                        scrollPane.setViewportView(tablaLibros);
-                        tablaLibros.setColumnSelectionAllowed(false);
-                        tablaLibros.setRowSelectionAllowed(true);
-                        tablaLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                            @Override
-                            public void valueChanged(ListSelectionEvent event) {
-                                boolean enable = tablaLibros.getSelectedRow() > -1;
-                                btnEditar.setEnabled(enable);
-                                btnEliminar.setEnabled(enable);
-                            }
-                        });
+
+        JScrollPane scrollPane = new JScrollPane();
+        contentPane.add(scrollPane);
+
+        tablaLibros = new JTable();
+        tablaLibros.setModel(modeloTablaLibros);
+        scrollPane.setViewportView(tablaLibros);
+        tablaLibros.setColumnSelectionAllowed(false);
+        tablaLibros.setRowSelectionAllowed(true);
+        tablaLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                boolean enable = tablaLibros.getSelectedRow() > -1;
+                btnEditar.setEnabled(enable);
+                btnEliminar.setEnabled(enable);
+            }
+        });
 
         JPanel panel_1 = new JPanel();
         contentPane.add(panel_1);
@@ -113,8 +112,8 @@ public class Vendedor extends JFrame {
     public ArrayList<Libro> getLibros() {
         return modeloTablaLibros.getLibros();
     }
-    
-    // Modelo de tabla tuning para manejar libros 
+
+    // Modelo de tabla para manejar libros 
     private class ModeloTablaLibros extends AbstractTableModel {
         private ArrayList<Libro> libros;
         private String[] columnas = {"Título", "Precio"};
