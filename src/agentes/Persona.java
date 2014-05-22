@@ -195,9 +195,8 @@ public class Persona extends Agent {
         Iterator<String> it = vendedores.iterator();
         while(it.hasNext())
         {
-            String obj = it.next();
-            msg.addReceiver(new AID(obj, AID.ISLOCALNAME));
-            System.out.println(obj);
+            String vendedor = it.next();
+            msg.addReceiver(new AID(vendedor, AID.ISLOCALNAME));
         }
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));

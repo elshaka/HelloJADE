@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import modelos.Libro;
+import javax.swing.ListSelectionModel;
 
 @SuppressWarnings("serial")
 public class Vendedor extends JFrame {
@@ -47,6 +48,7 @@ public class Vendedor extends JFrame {
         contentPane.add(scrollPane);
 
         tablaLibros = new JTable();
+        tablaLibros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaLibros.setModel(modeloTablaLibros);
         scrollPane.setViewportView(tablaLibros);
         tablaLibros.setColumnSelectionAllowed(false);
