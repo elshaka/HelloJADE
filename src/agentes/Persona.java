@@ -29,6 +29,7 @@ public class Persona extends Agent {
     public String papel;
     private Libro libro;
     private int dineroDisponible;
+    private int mejorPrecio;
     private ArrayList<String> vendedores;
 
     protected void setup() {
@@ -192,13 +193,13 @@ public class Persona extends Agent {
                     // Mensaje de la plataforma JADE: El destinatario no existe
                     System.out.println("El vendedor no existe");
                 } else {
-                    System.out.println("Vendedor " + failure.getSender().getLocalName() + " falló en realizar la venta");
+                    gui.aviso("Vendedor " + failure.getSender().getLocalName() + " falló en realizar la venta");
                 }
             }
 
             protected void handleAllResponses(Vector responses, Vector acceptances) {
                 try { // Aceptar la mejor propuesta
-                    int bestProposal = dineroDisponible; //Comprueba que la propuesta entre en el presupuesto
+                    mejorPrecio = dineroDisponible; //Comprueba que la propuesta entre en el presupuesto
                     @SuppressWarnings("unused")
                     AID bestProposer = null;
                     ACLMessage accept = null;
@@ -209,9 +210,9 @@ public class Persona extends Agent {
                             ACLMessage reply = response.createReply();
                             reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
                             acceptances.addElement(reply);
-                            int proposal = Integer.parseInt(response.getContent());
-                            if (proposal <= bestProposal) {
-                                bestProposal = proposal;
+                            int precio = Integer.parseInt(response.getContent());
+                            if (precio <= mejorPrecio) {
+                                mejorPrecio = precio;
                                 bestProposer = reply.getSender();
                                 accept = reply;
                             }
@@ -234,7 +235,7 @@ public class Persona extends Agent {
             }
 
             protected void handleInform(ACLMessage inform) {
-                System.out.println("Se realizó la compra del libro al vendedor " + inform.getSender().getLocalName());
+                gui.aviso("Se realizó la compra del libro al vendedor " + inform.getSender().getLocalName() + " por " + mejorPrecio + " Bs.");
             }
         });
     }
