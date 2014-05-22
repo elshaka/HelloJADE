@@ -27,8 +27,8 @@ public class Vendedor extends JFrame {
     private JTable tablaLibros;
     private agentes.Persona agente;
     private JButton btnEliminar;
-    private ModeloTablaLibros modeloTablaLibros;
     private JButton btnEditar;
+    private ModeloTablaLibros modeloTablaLibros;
 
     /**
      * Create the frame.
@@ -43,26 +43,23 @@ public class Vendedor extends JFrame {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
         modeloTablaLibros = new ModeloTablaLibros(new ArrayList<Libro>());
-
-        JPanel panel = new JPanel();
-        contentPane.add(panel);
-
-        JScrollPane scrollPane = new JScrollPane();
-        panel.add(scrollPane);
-
-        tablaLibros = new JTable();
-        tablaLibros.setModel(modeloTablaLibros);
-        scrollPane.setViewportView(tablaLibros);
-        tablaLibros.setColumnSelectionAllowed(false);
-        tablaLibros.setRowSelectionAllowed(true);
-        tablaLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent event) {
-                boolean enable = tablaLibros.getSelectedRow() > -1;
-                btnEditar.setEnabled(enable);
-                btnEliminar.setEnabled(enable);
-            }
-        });
+        
+                JScrollPane scrollPane = new JScrollPane();
+                contentPane.add(scrollPane);
+                
+                        tablaLibros = new JTable();
+                        tablaLibros.setModel(modeloTablaLibros);
+                        scrollPane.setViewportView(tablaLibros);
+                        tablaLibros.setColumnSelectionAllowed(false);
+                        tablaLibros.setRowSelectionAllowed(true);
+                        tablaLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                            @Override
+                            public void valueChanged(ListSelectionEvent event) {
+                                boolean enable = tablaLibros.getSelectedRow() > -1;
+                                btnEditar.setEnabled(enable);
+                                btnEliminar.setEnabled(enable);
+                            }
+                        });
 
         JPanel panel_1 = new JPanel();
         contentPane.add(panel_1);
@@ -84,9 +81,6 @@ public class Vendedor extends JFrame {
                 }
             }
         });
-        btnEditar.setPreferredSize(new Dimension(100, 23));
-        btnEditar.setMinimumSize(new Dimension(100, 23));
-        btnEditar.setMaximumSize(new Dimension(100, 23));
 
         btnEliminar = new JButton("Eliminar");
         panel_1.add(btnEliminar);
@@ -100,9 +94,6 @@ public class Vendedor extends JFrame {
             }
         });
 
-        btnEliminar.setPreferredSize(new Dimension(100, 23));
-        btnEliminar.setMinimumSize(new Dimension(100, 23));
-        btnEliminar.setMaximumSize(new Dimension(100, 23));
         btnAgregar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
