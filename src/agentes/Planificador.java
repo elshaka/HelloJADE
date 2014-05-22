@@ -28,17 +28,9 @@ public class Planificador extends Agent {
             UIManager.setLookAndFeel(
                 UIManager.getSystemLookAndFeelClassName());
         } 
-        catch (UnsupportedLookAndFeelException e) {
+        catch (Exception e) {
            // handle exception
-        }
-        catch (ClassNotFoundException e) {
-           // handle exception
-        }
-        catch (InstantiationException e) {
-           // handle exception
-        }
-        catch (IllegalAccessException e) {
-           // handle exception
+            e.printStackTrace();
         }
         
         gui = new gui.Planificador(this);

@@ -27,6 +27,7 @@ public class Persona extends Agent {
     private gui.Vendedor guiVendedor;
     public String papel;
     private String otraPersona;
+    private Libro libro;
 
     protected void setup() {
         // Leer destinatario desde el argumento
@@ -61,11 +62,18 @@ public class Persona extends Agent {
         addBehaviour(new ContractNetResponder(this, template) {
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
                 ArrayList<Libro> libros = guiVendedor.getLibros();
-
-                ACLMessage propose = cfp.createReply();
-                propose.setPerformative(ACLMessage.PROPOSE);
-                propose.setContent(String.valueOf(1000));
-                return propose;
+                libro = new Libro (cfp.getContent());
+                if (libros.contains(libro)) {
+                    ACLMessage propose = cfp.createReply();
+                    propose.setPerformative(ACLMessage.PROPOSE);
+                    propose.setContent(String.valueOf(libros.get(libros.indexOf(libro)).getPrecio()));
+                    return propose;
+                }
+                else {
+                 // We refuse to provide a proposal
+                    System.out.println("Agent "+getLocalName()+": Refuse");
+                    throw new RefuseException("evaluation-failed");
+                }
             }
 
             protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
@@ -167,7 +175,7 @@ public class Persona extends Agent {
 
         addBehaviour(new ContractNetInitiator(this, msg) {
             protected void handlePropose(ACLMessage propose, Vector v) {
-                System.out.println("Vendedor " + propose.getSender().getLocalName() + " ofrece el libro en " + propose.getContent() + " BsF.");
+                System.out.println("Vendedor " + propose.getSender().getLocalName() + " ofrece el libro en Bs." + propose.getContent());
             }
 
             protected void handleRefuse(ACLMessage refuse) {

@@ -145,7 +145,7 @@ public class Vendedor extends JFrame {
     public ArrayList<Libro> getLibros() {
         return modeloTablaLibros.getLibros();
     }
-
+    
     // Modelo de tabla tuning para manejar libros 
     private class ModeloTablaLibros extends AbstractTableModel {
         private ArrayList<Libro> libros;
