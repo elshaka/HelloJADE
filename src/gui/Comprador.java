@@ -17,7 +17,11 @@ import com.jgoodies.forms.factories.FormFactory;
 
 import modelos.Libro;
 import agentes.Persona;
+
 import javax.swing.SwingConstants;
+
+import utilidades.ValidadorNombre;
+import utilidades.ValidadorPrecio;
 
 @SuppressWarnings({"serial", "unused"})
 public class Comprador extends JPanel {

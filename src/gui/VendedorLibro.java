@@ -10,6 +10,9 @@ import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import utilidades.ValidadorNombre;
+import utilidades.ValidadorPrecio;
+
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
