@@ -1,36 +1,24 @@
 package gui;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.BoxLayout;
 
 import java.awt.Dimension;
-import java.awt.Component;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-
-
-
-
-
-
-
-
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
 
 import modelos.Libro;
-import modelos.ValidadorNombre;
-import modelos.ValidadorPrecio;
 import agentes.Persona;
-
-import java.awt.Insets;
 
 @SuppressWarnings("serial")
 public class Comprador extends JFrame {
@@ -39,6 +27,10 @@ public class Comprador extends JFrame {
     private Persona agente;
     private JTextField textFieldDineroDisponible;
     private JTextField textFieldNombre;
+    private JPanel panel;
+    private JPanel panel_1;
+    private JLabel lblDineroDisponible;
+    private JLabel lblDineroDisponible_1;
 
     /**
      * Create the frame.
@@ -47,108 +39,46 @@ public class Comprador extends JFrame {
         agente = comprador;
         setTitle(agente.getLocalName() + " (Comprador)");
         setPreferredSize(new Dimension(250, 100));
-        setBounds(100, 100, 240, 150);
+        setBounds(100, 100, 377, 190);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         
-        Box verticalBox = Box.createVerticalBox();
+        panel = new JPanel();
+        contentPane.add(panel);
+        FormLayout fl_panel = new FormLayout(new ColumnSpec[] {
+                FormFactory.RELATED_GAP_COLSPEC,
+                FormFactory.DEFAULT_COLSPEC,
+                FormFactory.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),},
+            new RowSpec[] {
+                FormFactory.RELATED_GAP_ROWSPEC,
+                FormFactory.DEFAULT_ROWSPEC,
+                FormFactory.RELATED_GAP_ROWSPEC,
+                FormFactory.DEFAULT_ROWSPEC,});
+        panel.setLayout(fl_panel);
         
-        Component verticalGlue = Box.createVerticalGlue();
-        verticalBox.add(verticalGlue);
-        
-        Box horizontalBox = Box.createHorizontalBox();
-        verticalBox.add(horizontalBox);
-        
-        Component horizontalStrut = Box.createHorizontalStrut(20);
-        horizontalStrut.setMaximumSize(new Dimension(10, 32767));
-        horizontalStrut.setMinimumSize(new Dimension(10, 0));
-        horizontalStrut.setPreferredSize(new Dimension(10, 0));
-        horizontalBox.add(horizontalStrut);
-        
-        JLabel lblDineroDisponible = new JLabel("Dinero disponible (Bs.)");
-        horizontalBox.add(lblDineroDisponible);
-        
-        Component horizontalGlue_3 = Box.createHorizontalGlue();
-        horizontalBox.add(horizontalGlue_3);
-        
-        textFieldDineroDisponible = new JTextField();
-        textFieldDineroDisponible.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        textFieldDineroDisponible.setMinimumSize(new Dimension(110, 20));
-        textFieldDineroDisponible.setMaximumSize(new Dimension(110, 20));
-        horizontalBox.add(textFieldDineroDisponible);
-        textFieldDineroDisponible.setPreferredSize(new Dimension(110, 20));
-        textFieldDineroDisponible.setColumns(10);
-        textFieldDineroDisponible.setInputVerifier(new ValidadorPrecio());
-        
-        Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-        horizontalStrut_1.setPreferredSize(new Dimension(10, 0));
-        horizontalStrut_1.setMinimumSize(new Dimension(10, 0));
-        horizontalStrut_1.setMaximumSize(new Dimension(10, 32767));
-        horizontalBox.add(horizontalStrut_1);
-        
-        Component verticalStrut = Box.createVerticalStrut(20);
-        verticalStrut.setPreferredSize(new Dimension(0, 5));
-        verticalBox.add(verticalStrut);
-        
-        Box horizontalBox_1 = Box.createHorizontalBox();
-        verticalBox.add(horizontalBox_1);
-        
-        Component horizontalStrut_2 = Box.createHorizontalStrut(20);
-        horizontalStrut_2.setMaximumSize(new Dimension(10, 32767));
-        horizontalStrut_2.setMinimumSize(new Dimension(10, 0));
-        horizontalStrut_2.setPreferredSize(new Dimension(10, 0));
-        horizontalBox_1.add(horizontalStrut_2);
-        
-        JLabel lblLibro = new JLabel("Libro");
-        horizontalBox_1.add(lblLibro);
-        
-        Component horizontalStrut_4 = Box.createHorizontalStrut(20);
-        horizontalBox_1.add(horizontalStrut_4);
+        lblDineroDisponible = new JLabel("Nombre");
+        panel.add(lblDineroDisponible, "2, 2, right, default");
         
         textFieldNombre = new JTextField();
-        textFieldNombre.setPreferredSize(new Dimension(600, 20));
-        textFieldNombre.setMaximumSize(new Dimension(600, 20));
-        horizontalBox_1.add(textFieldNombre);
-        textFieldNombre.setColumns(10);
+        panel.add(textFieldNombre, "4, 2, fill, default");
         textFieldNombre.setInputVerifier(new ValidadorNombre());
         
-        Component horizontalStrut_3 = Box.createHorizontalStrut(20);
-        horizontalStrut_3.setPreferredSize(new Dimension(10, 0));
-        horizontalStrut_3.setMinimumSize(new Dimension(10, 0));
-        horizontalStrut_3.setMaximumSize(new Dimension(10, 32767));
-        horizontalBox_1.add(horizontalStrut_3);
+        lblDineroDisponible_1 = new JLabel("Dinero disponible");
+        panel.add(lblDineroDisponible_1, "2, 4");
         
-        Component verticalStrut_1 = Box.createVerticalStrut(20);
-        verticalStrut_1.setPreferredSize(new Dimension(0, 10));
-        verticalBox.add(verticalStrut_1);
+        textFieldDineroDisponible = new JTextField();
+        panel.add(textFieldDineroDisponible, "4, 4, fill, default");
+        textFieldDineroDisponible.setInputVerifier(new ValidadorPrecio());
         
-        Box horizontalBox_2 = Box.createHorizontalBox();
-        verticalBox.add(horizontalBox_2);
+        panel_1 = new JPanel();
+        contentPane.add(panel_1);
         
-        Component horizontalGlue = Box.createHorizontalGlue();
-        horizontalBox_2.add(horizontalGlue);
-        
-        JButton btnBuscar = new JButton("Buscar");
-        btnBuscar.setMargin(new Insets(2, 12, 2, 12));
-        horizontalBox_2.add(btnBuscar);
-        btnBuscar.setMinimumSize(new Dimension(78, 23));
-        btnBuscar.setMaximumSize(new Dimension(78, 23));
-        btnBuscar.setPreferredSize(new Dimension(78, 23));
-        
-        Component horizontalGlue_1 = Box.createHorizontalGlue();
-        horizontalBox_2.add(horizontalGlue_1);
-        GroupLayout gl_contentPane = new GroupLayout(contentPane);
-        gl_contentPane.setHorizontalGroup(
-            gl_contentPane.createParallelGroup(Alignment.LEADING)
-                .addComponent(verticalBox, GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
-        );
-        gl_contentPane.setVerticalGroup(
-            gl_contentPane.createParallelGroup(Alignment.LEADING)
-                .addComponent(verticalBox, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-        );
-        contentPane.setLayout(gl_contentPane);
-        btnBuscar.addActionListener(new ActionListener() {
+        JButton btnComprar = new JButton("Comprar libro");
+        panel_1.add(btnComprar);
+        btnComprar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(validarCampos()) {
                     Libro libro = new Libro(textFieldNombre.getText().trim(),

@@ -8,7 +8,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.BoxLayout;
-import javax.swing.Box;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,7 +15,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.JButton;
 
 import java.awt.Dimension;
-import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -38,34 +36,23 @@ public class Vendedor extends JFrame {
     public Vendedor(agentes.Persona persona) {
         this.agente = persona;
         setTitle(agente.getLocalName() + " (Vendedor)");
-        setBounds(100, 100, 404, 330);
+        setBounds(100, 100, 400, 252);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
-        
-        Component horizontalStrut = Box.createHorizontalStrut(20);
-        horizontalStrut.setMaximumSize(new Dimension(20, 0));
-        contentPane.add(horizontalStrut);
-        
-        Box verticalBox = Box.createVerticalBox();
-        contentPane.add(verticalBox);
-        
-        Component verticalStrut_1 = Box.createVerticalStrut(20);
-        verticalStrut_1.setPreferredSize(new Dimension(0, 10));
-        verticalStrut_1.setMinimumSize(new Dimension(0, 10));
-        verticalStrut_1.setMaximumSize(new Dimension(0, 10));
-        verticalBox.add(verticalStrut_1);
-        
-        JScrollPane scrollPane = new JScrollPane();
-        verticalBox.add(scrollPane);
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
         modeloTablaLibros = new ModeloTablaLibros(new ArrayList<Libro>());
+
+        JPanel panel = new JPanel();
+        contentPane.add(panel);
+
+        JScrollPane scrollPane = new JScrollPane();
+        panel.add(scrollPane);
 
         tablaLibros = new JTable();
         tablaLibros.setModel(modeloTablaLibros);
         scrollPane.setViewportView(tablaLibros);
-
         tablaLibros.setColumnSelectionAllowed(false);
         tablaLibros.setRowSelectionAllowed(true);
         tablaLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -77,29 +64,14 @@ public class Vendedor extends JFrame {
             }
         });
 
-        Box horizontalBox = Box.createHorizontalBox();
-        verticalBox.add(horizontalBox);
+        JPanel panel_1 = new JPanel();
+        contentPane.add(panel_1);
 
         JButton btnAgregar = new JButton("Agregar");
-        btnAgregar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
-                Libro libro = agregarLibro.mostrar();
-                if(libro != null) {
-                    if(!getLibros().contains(libro)) {
-                        modeloTablaLibros.agregarLibro(libro);
-                    } else {
-                        JOptionPane.showMessageDialog(Vendedor.this, "El libro '" + libro.getNombre() + "' ya existe");
-                    }
-                }
-            }
-        });
-        horizontalBox.add(btnAgregar);
-        
-        Component horizontalGlue = Box.createHorizontalGlue();
-        horizontalBox.add(horizontalGlue);
-        
+        panel_1.add(btnAgregar);
+
         btnEditar = new JButton("Editar");
+        panel_1.add(btnEditar);
         btnEditar.setEnabled(false);
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -115,13 +87,10 @@ public class Vendedor extends JFrame {
         btnEditar.setPreferredSize(new Dimension(100, 23));
         btnEditar.setMinimumSize(new Dimension(100, 23));
         btnEditar.setMaximumSize(new Dimension(100, 23));
-        horizontalBox.add(btnEditar);
-        
-        Component horizontalGlue_1 = Box.createHorizontalGlue();
-        horizontalBox.add(horizontalGlue_1);
+
         btnEliminar = new JButton("Eliminar");
+        panel_1.add(btnEliminar);
         btnEliminar.setEnabled(false);
-        
         btnEliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = tablaLibros.getSelectedRow();
@@ -130,15 +99,23 @@ public class Vendedor extends JFrame {
                 }
             }
         });
-        
+
         btnEliminar.setPreferredSize(new Dimension(100, 23));
         btnEliminar.setMinimumSize(new Dimension(100, 23));
         btnEliminar.setMaximumSize(new Dimension(100, 23));
-        horizontalBox.add(btnEliminar);
-        
-        Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-        horizontalStrut_1.setMaximumSize(new Dimension(20, 0));
-        contentPane.add(horizontalStrut_1);
+        btnAgregar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
+                Libro libro = agregarLibro.mostrar();
+                if(libro != null) {
+                    if(!getLibros().contains(libro)) {
+                        modeloTablaLibros.agregarLibro(libro);
+                    } else {
+                        JOptionPane.showMessageDialog(Vendedor.this, "El libro '" + libro.getNombre() + "' ya existe");
+                    }
+                }
+            }
+        });
     }
 
     // Metodo que usaría el agente comprador para obtener sus libros
@@ -212,5 +189,4 @@ public class Vendedor extends JFrame {
             return libros;
         }
     }
-
 }

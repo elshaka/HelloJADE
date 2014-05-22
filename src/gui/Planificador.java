@@ -1,89 +1,102 @@
 package gui;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.BoxLayout;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
 
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.PopupMenuEvent;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
 
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class Planificador extends JFrame {
 
     private JPanel contentPane;
     private agentes.Planificador agente;
-    private JComboBox comboBox_Agente;
-    private JComboBox comboBox_Papel;
+    private JComboBox comboBoxAgentes;
+    private JComboBox comboBoxPapeles;
     private JButton btnAplicar;
+    private JPanel panel;
+    private JPanel panel_1;
     /**
      * Create the frame.
      */
     public Planificador(agentes.Planificador planificador) {
         agente = planificador;
         setTitle(agente.getLocalName() + " (Planificador)");
-        setBounds(100, 100, 250, 142);
+        setBounds(100, 100, 388, 183);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        SpringLayout sl_contentPane = new SpringLayout();
-        contentPane.setLayout(sl_contentPane);
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        
+        panel = new JPanel();
+        contentPane.add(panel);
+        panel.setLayout(new FormLayout(new ColumnSpec[] {
+                FormFactory.RELATED_GAP_COLSPEC,
+                FormFactory.DEFAULT_COLSPEC,
+                FormFactory.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),},
+            new RowSpec[] {
+                FormFactory.RELATED_GAP_ROWSPEC,
+                FormFactory.DEFAULT_ROWSPEC,
+                FormFactory.RELATED_GAP_ROWSPEC,
+                FormFactory.DEFAULT_ROWSPEC,}));
         
         JLabel lblAgente = new JLabel("Agente");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblAgente, 10, SpringLayout.NORTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblAgente, 10, SpringLayout.WEST, contentPane);
-        contentPane.add(lblAgente);
-        JLabel lblPapel = new JLabel("Papel");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPapel, 16, SpringLayout.SOUTH, lblAgente);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPapel, 0, SpringLayout.WEST, lblAgente);
-        contentPane.add(lblPapel);
-        comboBox_Agente = new JComboBox();
-        comboBox_Agente.addPopupMenuListener(new PopupMenuListener() {
+        panel.add(lblAgente, "2, 2");
+        comboBoxAgentes = new JComboBox();
+        panel.add(comboBoxAgentes, "4, 2, fill, default");
+        comboBoxAgentes.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuCanceled(PopupMenuEvent arg0) {}
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {}
 
             public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-                comboBox_Agente.removeAllItems();
+                comboBoxAgentes.removeAllItems();
                 ArrayList<String> personas = agente.buscarPersonas();
                 Iterator<String> i = personas.iterator();
                 while(i.hasNext()) {
-                    comboBox_Agente.addItem(i.next());
+                    comboBoxAgentes.addItem(i.next());
                 }
-                btnAplicar.setEnabled(!(comboBox_Agente.getItemCount()==0));
+                btnAplicar.setEnabled(!(comboBoxAgentes.getItemCount()==0));
             }
         });
-
-        sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox_Agente, 0, SpringLayout.NORTH, lblAgente);
-        sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Agente, -10, SpringLayout.EAST, contentPane);
-        contentPane.add(comboBox_Agente);
+        JLabel lblPapel = new JLabel("Papel");
+        panel.add(lblPapel, "2, 4");
         
-        comboBox_Papel = new JComboBox();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox_Papel, -3, SpringLayout.NORTH, lblPapel);
-        sl_contentPane.putConstraint(SpringLayout.EAST, comboBox_Papel, -10, SpringLayout.EAST, contentPane);
-        comboBox_Papel.setToolTipText("");
-        comboBox_Papel.setModel(new DefaultComboBoxModel(new String[] {"Comprador", "Vendedor"}));
-        contentPane.add(comboBox_Papel);
+        comboBoxPapeles = new JComboBox();
+        panel.add(comboBoxPapeles, "4, 4, fill, default");
+        comboBoxPapeles.setToolTipText("");
+        comboBoxPapeles.setModel(new DefaultComboBoxModel(new String[] {"Comprador", "Vendedor"}));
+        
+        panel_1 = new JPanel();
+        contentPane.add(panel_1);
+        panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
         
         btnAplicar = new JButton("Aplicar");
+        panel_1.add(btnAplicar);
         btnAplicar.setEnabled(false);
-        sl_contentPane.putConstraint(SpringLayout.WEST, comboBox_Agente, 0, SpringLayout.WEST, btnAplicar);
         btnAplicar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 // Asigno los valores de Persona y Papel a quien se desea asignar
-                agente.aplicarPapel(comboBox_Agente.getSelectedItem().toString(), comboBox_Papel.getSelectedItem().toString());
+                agente.aplicarPapel(comboBoxAgentes.getSelectedItem().toString().trim(),
+                        comboBoxPapeles.getSelectedItem().toString());
             }
         });
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnAplicar, 0, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnAplicar, -74, SpringLayout.EAST, contentPane);
-        contentPane.add(btnAplicar);
     }
 }

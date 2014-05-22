@@ -1,6 +1,7 @@
 package agentes;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import jade.core.*;
 import jade.domain.DFService;
@@ -11,49 +12,25 @@ import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 import jade.domain.FIPANames;
 
-import java.util.Date;
-
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 @SuppressWarnings("serial")
 public class Planificador extends Agent {
     private gui.Planificador gui;
-    
+
     protected void setup() {
-        System.out.println(this.getLocalName() + " iniciado");
-        
-        try {
-            // Set System L&F
-            UIManager.setLookAndFeel(
-                UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (UnsupportedLookAndFeelException e) {
-           // handle exception
-        }
-        catch (ClassNotFoundException e) {
-           // handle exception
-        }
-        catch (InstantiationException e) {
-           // handle exception
-        }
-        catch (IllegalAccessException e) {
-           // handle exception
-        }
-        
         gui = new gui.Planificador(this);
         gui.setVisible(true);
     }
 
     protected void takeDown() {
-        System.out.println(this.getLocalName() + " terminado");
+        gui.setVisible(false);
+        gui = null;
     }
 
     public ArrayList<String> buscarPersonas() {
         ArrayList<String> personas = new ArrayList<String>();
 
         DFAgentDescription dfd = new DFAgentDescription();
-        ServiceDescription sd  = new ServiceDescription();
+        ServiceDescription sd = new ServiceDescription();
         sd.setType("persona");
         dfd.addServices(sd);
         try {
@@ -67,11 +44,11 @@ public class Planificador extends Agent {
 
         return personas;
     }
-    
+
     // Inicia el protocolo FIPARequest para asignar el papel a una persona
     public void aplicarPapel(String persona, String papel){
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-        msg.addReceiver(new AID((String) persona, AID.ISLOCALNAME));
+        msg.addReceiver(new AID(persona, AID.ISLOCALNAME));
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
         msg.setContent(papel);

@@ -1,28 +1,27 @@
 package gui;
-import javax.swing.BorderFactory;
-import javax.swing.InputVerifier;
+
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-
-import javax.swing.BoxLayout;
-
-import modelos.Libro;
-import modelos.ValidadorNombre;
-import modelos.ValidadorPrecio;
-
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+
+import modelos.Libro;
 
 @SuppressWarnings("serial")
 public class VendedorLibro extends JDialog {
@@ -38,107 +37,71 @@ public class VendedorLibro extends JDialog {
         this.libro = libro;
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 320, 167);
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+        setBounds(100, 100, 320, 154);
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         {
-            Box verticalBox = Box.createVerticalBox();
-            verticalBox.setBounds(new Rectangle(0, 100, 100, 100));
-            getContentPane().add(verticalBox);
+            JPanel panel = new JPanel();
+            panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+            getContentPane().add(panel);
+            panel.setLayout(new FormLayout(new ColumnSpec[] {
+                    FormFactory.RELATED_GAP_COLSPEC,
+                    FormFactory.DEFAULT_COLSPEC,
+                    FormFactory.RELATED_GAP_COLSPEC,
+                    ColumnSpec.decode("default:grow"),},
+                new RowSpec[] {
+                    FormFactory.RELATED_GAP_ROWSPEC,
+                    FormFactory.DEFAULT_ROWSPEC,
+                    FormFactory.RELATED_GAP_ROWSPEC,
+                    FormFactory.DEFAULT_ROWSPEC,}));
             {
-                Box horizontalBox = Box.createHorizontalBox();
-                verticalBox.add(horizontalBox);
-                {
-                    JLabel lblNombre = new JLabel("Nombre");
-                    horizontalBox.add(lblNombre);
-                }
-                {
-                    Component horizontalStrut = Box.createHorizontalStrut(20);
-                    horizontalStrut.setMaximumSize(new Dimension(20, 0));
-                    horizontalBox.add(horizontalStrut);
-                }
-                {
-                    textFieldNombre = new JTextField();
-                    textFieldNombre.setMaximumSize(new Dimension(2147483647, 20));
-                    horizontalBox.add(textFieldNombre);
-                    textFieldNombre.setColumns(10);
-                    textFieldNombre.setInputVerifier(new ValidadorNombre());
-                }
+                JLabel lblNombre = new JLabel("Nombre");
+                panel.add(lblNombre, "2, 2");
             }
             {
-                Component verticalStrut = Box.createVerticalStrut(20);
-                verticalStrut.setPreferredSize(new Dimension(0, 10));
-                verticalStrut.setMinimumSize(new Dimension(0, 10));
-                verticalStrut.setMaximumSize(new Dimension(0, 10));
-                verticalBox.add(verticalStrut);
+                textFieldNombre = new JTextField();
+                panel.add(textFieldNombre, "4, 2, fill, default");
+                textFieldNombre.setMaximumSize(new Dimension(2147483647, 20));
+                textFieldNombre.setColumns(10);
+                textFieldNombre.setInputVerifier(new ValidadorNombre());
             }
             {
-                Box horizontalBox = Box.createHorizontalBox();
-                verticalBox.add(horizontalBox);
-                {
-                    JLabel lblNewLabel = new JLabel("Precio Bs.");
-                    horizontalBox.add(lblNewLabel);
-                }
-                {
-                    Component horizontalStrut = Box.createHorizontalStrut(20);
-                    horizontalStrut.setPreferredSize(new Dimension(10, 0));
-                    horizontalStrut.setMinimumSize(new Dimension(10, 0));
-                    horizontalStrut.setMaximumSize(new Dimension(10, 0));
-                    horizontalBox.add(horizontalStrut);
-                }
-                {
-                    textFieldPrecio = new JTextField();
-                    textFieldPrecio.setMaximumSize(new Dimension(2147483647, 20));
-                    horizontalBox.add(textFieldPrecio);
-                    textFieldPrecio.setColumns(10);
-                    textFieldPrecio.setInputVerifier(new ValidadorPrecio());
-                }
+                JLabel lblNewLabel = new JLabel("Precio Bs.");
+                panel.add(lblNewLabel, "2, 4, fill, default");
             }
             {
-                Component verticalStrut = Box.createVerticalStrut(20);
-                verticalStrut.setPreferredSize(new Dimension(0, 10));
-                verticalStrut.setMinimumSize(new Dimension(0, 10));
-                verticalStrut.setMaximumSize(new Dimension(0, 10));
-                verticalBox.add(verticalStrut);
+                textFieldPrecio = new JTextField();
+                panel.add(textFieldPrecio, "4, 4");
+                textFieldPrecio.setMaximumSize(new Dimension(2147483647, 20));
+                textFieldPrecio.setColumns(10);
+                textFieldPrecio.setInputVerifier(new ValidadorPrecio());
             }
+        }
+        {
+            JPanel panel_1 = new JPanel();
+            getContentPane().add(panel_1);
             {
-                Box horizontalBox = Box.createHorizontalBox();
-                verticalBox.add(horizontalBox);
-                {
-                    Component horizontalGlue = Box.createHorizontalGlue();
-                    horizontalBox.add(horizontalGlue);
-                }
-                {
-                    JButton btnAceptar = new JButton("Aceptar");
-                    btnAceptar.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent arg0) {
-                            if(validarCampos()) {
-                                VendedorLibro.this.libro = new Libro(textFieldNombre.getText().trim(),
-                                        Integer.parseInt(textFieldPrecio.getText().trim()));
-                                setVisible(false);
-                            } else {
-                                JOptionPane.showMessageDialog(VendedorLibro.this, "Campos inválidos");
-                            }
-                        }
-                    });
-                    horizontalBox.add(btnAceptar);
-                }
-                {
-                    Component horizontalGlue = Box.createHorizontalGlue();
-                    horizontalBox.add(horizontalGlue);
-                }
+                JButton btnAceptar = new JButton("Aceptar");
+                panel_1.add(btnAceptar);
                 {
                     JButton btnCancelar = new JButton("Cancelar");
+                    panel_1.add(btnCancelar);
                     btnCancelar.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent arg0) {
                             setVisible(false);
                         }
                     });
-                    horizontalBox.add(btnCancelar);
                 }
-                {
-                    Component horizontalGlue = Box.createHorizontalGlue();
-                    horizontalBox.add(horizontalGlue);
-                }
+                btnAceptar.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent arg0) {
+                        if(validarCampos()) {
+                            VendedorLibro.this.libro = new Libro(textFieldNombre.getText().trim(),
+                                    Integer.parseInt(textFieldPrecio.getText().trim()));
+                            setVisible(false);
+                        } else {
+                            JOptionPane.showMessageDialog(VendedorLibro.this, "Campos inválidos");
+                        }
+                    }
+                });
             }
         }
 
