@@ -65,8 +65,7 @@ public class Persona extends Agent {
                     propose.setPerformative(ACLMessage.PROPOSE);
                     propose.setContent(String.valueOf(libros.get(libros.indexOf(libro)).getPrecio()));
                     return propose;
-                }
-                else {
+                } else {
                  // We refuse to provide a proposal
                     System.out.println("Agent "+getLocalName()+": Refuse");
                     throw new RefuseException("No tengo el libro");

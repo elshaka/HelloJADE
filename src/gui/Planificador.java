@@ -38,7 +38,7 @@ public class Planificador extends JFrame {
     public Planificador(agentes.Planificador planificador) {
         agente = planificador;
         setTitle(agente.getLocalName() + " (Planificador)");
-        setBounds(100, 100, 388, 183);
+        setBounds(100, 100, 388, 231);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
