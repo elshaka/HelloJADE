@@ -25,25 +25,15 @@ import jade.proto.ContractNetResponder;
 
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class Persona extends Agent {
-    private gui.Comprador guiComprador;
-    private gui.Vendedor guiVendedor;
+    private gui.Persona gui;
     public String papel;
-    private String otraPersona;
     private Libro libro;
     private int dineroDisponible;
     private ArrayList<String> vendedores;
 
     protected void setup() {
-        // Leer destinatario desde el argumento
-        Object[] args = this.getArguments();
-        if (args != null && args.length > 0) {
-            this.otraPersona = (String) args[0];
-        } else {
-            this.otraPersona = this.getLocalName() + "Destino";
-        }
-
-        guiComprador = new gui.Comprador(this);
-        guiVendedor = new gui.Vendedor(this);
+        gui = new gui.Persona(this);
+        gui.setVisible(true);
 
         // Registrar agente como "persona"
         DFAgentDescription dfd = new DFAgentDescription();
@@ -65,7 +55,10 @@ public class Persona extends Agent {
         );
         addBehaviour(new ContractNetResponder(this, template) {
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-                ArrayList<Libro> libros = guiVendedor.getLibros();
+                if(papel.equals("Comprador")) {
+                    throw new RefuseException("No soy comprador");
+                }
+                ArrayList<Libro> libros = gui.getLibros();
                 libro = new Libro (cfp.getContent());
                 if (libros.contains(libro)) {
                     ACLMessage propose = cfp.createReply();
@@ -76,7 +69,7 @@ public class Persona extends Agent {
                 else {
                  // We refuse to provide a proposal
                     System.out.println("Agent "+getLocalName()+": Refuse");
-                    throw new RefuseException("evaluation-failed");
+                    throw new RefuseException("No tengo el libro");
                 }
             }
 
@@ -119,8 +112,8 @@ public class Persona extends Agent {
 
     protected void takeDown() {
         // Eliminar la GUI
-        this.guiComprador = null;
-        this.guiVendedor = null;
+        gui.setVisible(false);
+        gui = null;
         // Eliminar agente del registro
         try {
             DFService.deregister(this);
@@ -150,24 +143,7 @@ public class Persona extends Agent {
         // Actualizar registro y actualizar GUI
         DFService.modify(this, dfd);
 
-        cerrarVistas();
-        switch(papel) {
-        case "Comprador":
-            guiComprador.setVisible(true);
-            break;
-        case "Vendedor":
-            guiVendedor.setVisible(true);
-            break;
-        }
-    }
-
-    void cerrarVistas(){
-        if (this.guiComprador != null) {
-            this.guiComprador.setVisible(false);
-        }
-        if (this.guiVendedor != null) {
-            this.guiVendedor.setVisible(false);
-        }
+        gui.setPapel(papel);
     }
 
     public ArrayList<String> buscarVendedores() {
@@ -209,7 +185,7 @@ public class Persona extends Agent {
             }
 
             protected void handleRefuse(ACLMessage refuse) {
-                System.out.println("Vendedor " + refuse.getSender().getLocalName() + " no tiene el libro");
+                System.out.println(refuse.getSender().getLocalName() + ": " + refuse.getContent());
             }
 
             protected void handleFailure(ACLMessage failure) {
@@ -224,6 +200,7 @@ public class Persona extends Agent {
             protected void handleAllResponses(Vector responses, Vector acceptances) {
                 try { // Aceptar la mejor propuesta
                     int bestProposal = dineroDisponible; //Comprueba que la propuesta entre en el presupuesto
+                    @SuppressWarnings("unused")
                     AID bestProposer = null;
                     ACLMessage accept = null;
                     Enumeration e = responses.elements();
@@ -241,23 +218,19 @@ public class Persona extends Agent {
                             }
                         }
                     }
-                    //Aceptar propuesta del Vendedor mas economico
+                    // Aceptar propuesta del Vendedor mas economico
                     if (accept != null) {
                         accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                    }
-                    
-                    else {
+                    } else {
                         if (acceptances.isEmpty()){
-                            System.out.println("No se consiguió el libro");
+                            gui.aviso("No se consiguió el libro");
                         }
                         else {
-                            System.out.println("Dinero insuficiente para comprar el libro");
+                            gui.aviso("Dinero insuficiente para comprar el libro");
                         }
                     }
-                    
-                }
-                catch (NoSuchElementException e) { // No hubo ninguna respuesta
-                    System.out.println("No se consiguieron vendedores");
+                } catch (NoSuchElementException e) { // No hubo ninguna respuesta
+                    gui.aviso("No se consiguieron vendedores");
                 }
             }
 

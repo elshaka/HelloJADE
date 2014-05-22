@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,14 +18,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import modelos.Libro;
+
 import javax.swing.ListSelectionModel;
 
-@SuppressWarnings("serial")
-public class Vendedor extends JFrame {
+@SuppressWarnings({"serial", "unused"})
+public class Vendedor extends JPanel {
 
-    private JPanel contentPane;
-    private JTable tablaLibros;
     private agentes.Persona agente;
+    private JFrame frame;
+    private JTable tablaLibros;
     private JButton btnEliminar;
     private JButton btnEditar;
     private ModeloTablaLibros modeloTablaLibros;
@@ -33,19 +34,19 @@ public class Vendedor extends JFrame {
     /**
      * Create the frame.
      */
-    public Vendedor(agentes.Persona persona) {
-        this.agente = persona;
-        setTitle(agente.getLocalName() + " (Vendedor)");
-        setBounds(100, 100, 400, 252);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+    public Vendedor(JFrame frame, agentes.Persona persona) {
+        this.frame = frame;
+        agente = persona;
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        JLabel lblNewLabel = new JLabel("Vendedor");
+        add(lblNewLabel);
 
         modeloTablaLibros = new ModeloTablaLibros(new ArrayList<Libro>());
 
         JScrollPane scrollPane = new JScrollPane();
-        contentPane.add(scrollPane);
+        add(scrollPane);
 
         tablaLibros = new JTable();
         tablaLibros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -63,7 +64,7 @@ public class Vendedor extends JFrame {
         });
 
         JPanel panel_1 = new JPanel();
-        contentPane.add(panel_1);
+        add(panel_1);
 
         JButton btnAgregar = new JButton("Agregar");
         panel_1.add(btnAgregar);
@@ -76,7 +77,7 @@ public class Vendedor extends JFrame {
                 int selectedRow = tablaLibros.getSelectedRow();
                 if (selectedRow > -1) {
                     Libro libroEditado = modeloTablaLibros.getLibro(selectedRow);
-                    VendedorLibro editarLibro = new VendedorLibro(Vendedor.this, "Editar libro", true, libroEditado);
+                    VendedorLibro editarLibro = new VendedorLibro(Vendedor.this.frame, "Editar libro", true, libroEditado);
                     libroEditado = editarLibro.mostrar();
                     modeloTablaLibros.actualizarLibro(selectedRow, libroEditado);
                 }
@@ -97,7 +98,7 @@ public class Vendedor extends JFrame {
 
         btnAgregar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this, "Agregar libro", true, null);
+                VendedorLibro agregarLibro = new VendedorLibro(Vendedor.this.frame, "Agregar libro", true, null);
                 Libro libro = agregarLibro.mostrar();
                 if(libro != null) {
                     if(!getLibros().contains(libro)) {
