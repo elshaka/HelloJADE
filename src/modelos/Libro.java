@@ -3,6 +3,10 @@ package modelos;
 public class Libro {
     private String nombre;
     private int precio;
+    
+    public Libro(String titulo) {
+        this.nombre = titulo;
+    }
 
     public Libro(String titulo, int precio) {
         this.nombre = titulo;
