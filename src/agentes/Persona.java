@@ -2,6 +2,7 @@ package agentes;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
@@ -28,6 +29,7 @@ public class Persona extends Agent {
     public String papel;
     private String otraPersona;
     private Libro libro;
+    private int dineroDisponible;
 
     protected void setup() {
         // Leer destinatario desde el argumento
@@ -172,6 +174,7 @@ public class Persona extends Agent {
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
         msg.setContent(libro.getNombre());
+        dineroDisponible = libro.getPrecio();
 
         addBehaviour(new ContractNetInitiator(this, msg) {
             protected void handlePropose(ACLMessage propose, Vector v) {
@@ -192,17 +195,41 @@ public class Persona extends Agent {
             }
 
             protected void handleAllResponses(Vector responses, Vector acceptances) {
-                try { // Aceptar la primera oferta
-                    ACLMessage response = (ACLMessage) responses.firstElement();
-                    if (response.getPerformative() == ACLMessage.PROPOSE) {
-                        ACLMessage reply = response.createReply();
-                        reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                        acceptances.addElement(reply);
-                    } else { // No se recibio oferta
-                        System.out.println("No se consiguió el libro");
+                try { // Aceptar la mejor propuesta
+                    int bestProposal = dineroDisponible; //Comprueba que la propuesta entre en el presupuesto
+                    AID bestProposer = null;
+                    ACLMessage accept = null;
+                    Enumeration e = responses.elements();
+                    while (e.hasMoreElements()) {
+                        ACLMessage response = (ACLMessage) e.nextElement();
+                        if (response.getPerformative() == ACLMessage.PROPOSE) {
+                            ACLMessage reply = response.createReply();
+                            reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                            acceptances.addElement(reply);
+                            int proposal = Integer.parseInt(response.getContent());
+                            if (proposal <= bestProposal) {
+                                bestProposal = proposal;
+                                bestProposer = reply.getSender();
+                                accept = reply;
+                            }
+                        }
+                    }
+                    //Aceptar propuesta del Vendedor mas economico
+                    if (accept != null) {
+                        accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                     }
                     
-                } catch (NoSuchElementException e) { // No hubo ninguna respuesta
+                    else {
+                        if (acceptances.isEmpty()){
+                            System.out.println("No se consiguió el libro");
+                        }
+                        else {
+                            System.out.println("Dinero insuficiente para comprar el libro");
+                        }
+                    }
+                    
+                }
+                catch (NoSuchElementException e) { // No hubo ninguna respuesta
                     System.out.println("No se consiguieron vendedores");
                 }
             }
