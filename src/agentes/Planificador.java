@@ -14,10 +14,10 @@ import jade.domain.FIPANames;
 
 @SuppressWarnings("serial")
 public class Planificador extends Agent {
-    private gui.Planificador gui;
+    private vistas.Planificador gui;
 
     protected void setup() {
-        gui = new gui.Planificador(this);
+        gui = new vistas.Planificador(this);
         gui.setVisible(true);
     }
 

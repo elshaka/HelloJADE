@@ -1,4 +1,4 @@
-package gui;
+package vistas;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;

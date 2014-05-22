@@ -25,14 +25,14 @@ import jade.proto.ContractNetResponder;
 
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class Persona extends Agent {
-    private gui.Persona gui;
+    private vistas.Persona gui;
     public String papel;
     private Libro libro;
     private int dineroDisponible;
     private ArrayList<String> vendedores;
 
     protected void setup() {
-        gui = new gui.Persona(this);
+        gui = new vistas.Persona(this);
         gui.setVisible(true);
 
         // Registrar agente como "persona"
