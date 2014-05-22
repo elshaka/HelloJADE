@@ -3,6 +3,7 @@ package agentes;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
@@ -30,6 +31,7 @@ public class Persona extends Agent {
     private String otraPersona;
     private Libro libro;
     private int dineroDisponible;
+    private ArrayList<String> vendedores;
 
     protected void setup() {
         // Leer destinatario desde el argumento
@@ -168,9 +170,35 @@ public class Persona extends Agent {
         }
     }
 
+    public ArrayList<String> buscarVendedores() {
+        ArrayList<String> vendedores = new ArrayList<String>();
+
+        DFAgentDescription dfd = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("Vendedor");
+        dfd.addServices(sd);
+        try {
+            DFAgentDescription[] result = DFService.search(this, dfd);
+            for(int i = 0; i < result.length; i++) {
+                vendedores.add(result[i].getName().getLocalName());
+            }
+        } catch (FIPAException fe) {
+            fe.printStackTrace();
+        }
+
+        return vendedores;
+    }
+    
     public void buscarLibro(Libro libro) {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-        msg.addReceiver(new AID(this.otraPersona, AID.ISLOCALNAME));
+        vendedores = buscarVendedores();
+        Iterator<String> it = vendedores.iterator();
+        while(it.hasNext())
+        {
+            String obj = it.next();
+            msg.addReceiver(new AID(obj, AID.ISLOCALNAME));
+            System.out.println(obj);
+        }
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
         msg.setContent(libro.getNombre());
