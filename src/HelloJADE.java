@@ -11,10 +11,8 @@ public class HelloJADE {
         try {
             // Usar look & feel nativo en las vistas
             UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {}
 
         // Plataforma JADE
         Runtime runtime = Runtime.instance();

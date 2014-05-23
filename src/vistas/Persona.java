@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
 
 import modelos.Libro;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 @SuppressWarnings("serial")
 public class Persona extends JFrame {
@@ -17,10 +19,19 @@ public class Persona extends JFrame {
     private Comprador panelComprador;
     private Vendedor panelVendedor;
 
+    private agentes.Persona agente;
+
     public Persona(agentes.Persona persona) {
+        agente = persona;
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                agente.doDelete();
+            }
+        });
         setTitle(persona.getLocalName());
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 400, 300);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -29,11 +40,11 @@ public class Persona extends JFrame {
 
         panelComprador = new Comprador(this, persona);
         panelComprador.setVisible(false);
-        add(panelComprador);
+        getContentPane().add(panelComprador);
 
         panelVendedor = new Vendedor(this, persona);
         panelVendedor.setVisible(false);
-        add(panelVendedor);
+        getContentPane().add(panelVendedor);
     }
 
     public ArrayList<Libro> getLibros() {

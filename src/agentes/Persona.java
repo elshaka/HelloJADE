@@ -111,13 +111,14 @@ public class Persona extends Agent {
     }
 
     protected void takeDown() {
-        // Eliminar la GUI
-        gui.setVisible(false);
-        gui = null;
+        // Eliminar vista
+        gui.dispose();
         // Eliminar agente del registro
         try {
             DFService.deregister(this);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println(this.getLocalName() + " finalizado");
     }
 
@@ -169,10 +170,8 @@ public class Persona extends Agent {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         vendedores = buscarVendedores();
         Iterator<String> it = vendedores.iterator();
-        while(it.hasNext())
-        {
-            String vendedor = it.next();
-            msg.addReceiver(new AID(vendedor, AID.ISLOCALNAME));
+        while(it.hasNext()) {
+            msg.addReceiver(new AID(it.next(), AID.ISLOCALNAME));
         }
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
@@ -181,11 +180,13 @@ public class Persona extends Agent {
 
         addBehaviour(new ContractNetInitiator(this, msg) {
             protected void handlePropose(ACLMessage propose, Vector v) {
-                System.out.println("Vendedor " + propose.getSender().getLocalName() + " ofrece el libro en Bs." + propose.getContent());
+                System.out.println("Vendedor " + propose.getSender().getLocalName() +
+                        " ofrece el libro en Bs." + propose.getContent());
             }
 
             protected void handleRefuse(ACLMessage refuse) {
-                System.out.println(refuse.getSender().getLocalName() + ": " + refuse.getContent());
+                System.out.println(refuse.getSender().getLocalName() +
+                        ": " + refuse.getContent());
             }
 
             protected void handleFailure(ACLMessage failure) {
@@ -193,13 +194,14 @@ public class Persona extends Agent {
                     // Mensaje de la plataforma JADE: El destinatario no existe
                     System.out.println("El vendedor no existe");
                 } else {
-                    gui.aviso("Vendedor " + failure.getSender().getLocalName() + " falló en realizar la venta");
+                    gui.aviso("Vendedor " + failure.getSender().getLocalName() +
+                            " falló en realizar la venta");
                 }
             }
 
             protected void handleAllResponses(Vector responses, Vector acceptances) {
                 try { // Aceptar la mejor propuesta
-                    mejorPrecio = dineroDisponible; //Comprueba que la propuesta entre en el presupuesto
+                    mejorPrecio = dineroDisponible; // Comprueba que la propuesta entre en el presupuesto
                     @SuppressWarnings("unused")
                     AID bestProposer = null;
                     ACLMessage accept = null;
@@ -211,7 +213,7 @@ public class Persona extends Agent {
                             reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
                             acceptances.addElement(reply);
                             int precio = Integer.parseInt(response.getContent());
-                            if (precio <= mejorPrecio) {
+                            if(precio <= mejorPrecio) {
                                 mejorPrecio = precio;
                                 bestProposer = reply.getSender();
                                 accept = reply;
@@ -219,7 +221,7 @@ public class Persona extends Agent {
                         }
                     }
                     // Aceptar propuesta del Vendedor mas economico
-                    if (accept != null) {
+                    if(accept != null) {
                         accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                     } else {
                         if (acceptances.isEmpty()){
@@ -229,13 +231,15 @@ public class Persona extends Agent {
                             gui.aviso("Dinero insuficiente para comprar el libro");
                         }
                     }
-                } catch (NoSuchElementException e) { // No hubo ninguna respuesta
+                } catch(NoSuchElementException e) { // No hubo ninguna respuesta
                     gui.aviso("No se consiguieron vendedores");
                 }
             }
 
             protected void handleInform(ACLMessage inform) {
-                gui.aviso("Se realizó la compra del libro al vendedor " + inform.getSender().getLocalName() + " por " + mejorPrecio + " Bs.");
+                gui.aviso("Se realizó la compra del libro al vendedor " + 
+                        inform.getSender().getLocalName() +
+                        " por " + mejorPrecio + " Bs.");
             }
         });
     }

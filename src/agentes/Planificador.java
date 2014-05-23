@@ -22,8 +22,8 @@ public class Planificador extends Agent {
     }
 
     protected void takeDown() {
-        gui.setVisible(false);
-        gui = null;
+        gui.dispose();
+        System.out.print(this.getLocalName() + " finalizado");
     }
 
     public ArrayList<String> buscarPersonas() {
@@ -38,7 +38,7 @@ public class Planificador extends Agent {
             for(int i = 0; i < result.length; i++) {
                 personas.add(result[i].getName().getLocalName());
             }
-        } catch (FIPAException fe) {
+        } catch(FIPAException fe) {
             fe.printStackTrace();
         }
 
