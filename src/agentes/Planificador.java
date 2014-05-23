@@ -45,7 +45,6 @@ public class Planificador extends Agent {
         return personas;
     }
 
-    // Inicia el protocolo FIPARequest para asignar el papel a una persona
     public void aplicarPapel(String persona, String papel){
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID(persona, AID.ISLOCALNAME));
@@ -53,6 +52,7 @@ public class Planificador extends Agent {
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
         msg.setContent(papel);
 
+        // Agregar comportamiento AchieveREInitiator (Asignar papel a persona)
         addBehaviour(new AchieveREInitiator(this, msg) {
             protected void handleInform(ACLMessage inform) {
                 System.out.println(inform.getSender().getLocalName() + " recibió de manera correcta su papel");

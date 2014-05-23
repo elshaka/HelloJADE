@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
-import modelos.Libro;
 import jade.core.*;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -22,6 +21,8 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
+
+import modelos.Libro;
 
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class Persona extends Agent {
@@ -49,7 +50,7 @@ public class Persona extends Agent {
             e.printStackTrace();
         }
 
-        // Agregar comportamiento ContractNetResponder
+        // Agregar comportamiento ContractNetResponder (Venta de libros)
         MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP)
@@ -57,18 +58,17 @@ public class Persona extends Agent {
         addBehaviour(new ContractNetResponder(this, template) {
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
                 if(papel.equals("Comprador")) {
-                    throw new RefuseException("No soy comprador");
+                    throw new RefuseException("No soy vendedor");
                 }
                 ArrayList<Libro> libros = gui.getLibros();
-                libro = new Libro (cfp.getContent());
+                libro = new Libro(cfp.getContent());
                 if (libros.contains(libro)) {
                     ACLMessage propose = cfp.createReply();
                     propose.setPerformative(ACLMessage.PROPOSE);
                     propose.setContent(String.valueOf(libros.get(libros.indexOf(libro)).getPrecio()));
                     return propose;
                 } else {
-                 // We refuse to provide a proposal
-                    System.out.println("Agent "+getLocalName()+": Refuse");
+                    System.out.println("Agent " + getLocalName() + ": Refuse");
                     throw new RefuseException("No tengo el libro");
                 }
             }
@@ -80,7 +80,7 @@ public class Persona extends Agent {
             }
         });
 
-        // Agregar comportamiento AchieveREResponder
+        // Agregar comportamiento AchieveREResponder (Para definir un papel asignado por el planificador)
         template = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
